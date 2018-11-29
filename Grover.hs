@@ -9,19 +9,12 @@ getSolutions n bs =
     if (n>0) then
       do
         out <- run grover
-        if (head out) then
+        if head out && (tail out) `notElem` bs then
           getSolutions (n-1) (bs ++ [tail out])
         else
           getSolutions n bs
     else
-      mapM_ print (rmdups bs)
-
-rmdups :: Eq a => [a] -> [a]
-rmdups = rdHelper []
-  where rdHelper seen [] = seen
-        rdHelper seen (x:xs)
-          | x `elem` seen = rdHelper seen xs
-          | otherwise     = rdHelper (seen ++ [x]) xs
+      mapM_ print bs
 
 {-
 Chance returns the probability that the qubits q1, q2, q3 and q4 contain
