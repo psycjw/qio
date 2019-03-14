@@ -96,7 +96,7 @@ customOracle n (p:ps) qI qO =
     conds p qI = map (\x -> qI!!((abs x)-1)) p
 
 calcIterations :: Int -> Int -> Int
-calcIterations n s = ceiling $ (pi/4) * sqrt((fromIntegral n)/(fromIntegral s))
+calcIterations n s = round $ (pi/4) * sqrt((fromIntegral n)/(fromIntegral s))
 
 removeOOB :: Int -> [Int] -> [Int]
 removeOOB _ [] = []
