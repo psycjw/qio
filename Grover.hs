@@ -113,9 +113,11 @@ effectively "picking" out solution states.
 -}
 diffuse :: [Qbit] -> U
 diffuse qI =
-  uhadN (init qI) <>
-  condXn qI <>
-  uhadN (init qI)
+  uhadN qI <>
+  unotN qI <>
+  condZn qI <>
+  unotN qI <>
+  uhadN qI
 
 mkQbits :: Int -> Bool -> QIO [Qbit]
 mkQbits n b = mkQbits' n b []
@@ -137,6 +139,10 @@ measQbits qs = measQbits' qs []
 condXn :: [Qbit] -> U
 condXn (ql:[]) = unot ql
 condXn (q:qs) = cond q (\x -> if x then (condXn qs) else mempty)
+
+condZn :: [Qbit] -> U
+condZn (ql:[]) = uphase ql pi
+condZn (q:qs) = cond q (\x -> if x then (condZn qs) else mempty)
 
 -- performs multiple unot gates over each qubit input
 unotN :: [Qbit] -> U
