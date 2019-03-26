@@ -1,0 +1,631 @@
+\documentclass[a4paper,11pt, titlepage, twoside]{article}
+
+\usepackage{graphicx, verbatimbox}
+\usepackage[nottoc,numbib, section]{tocbibind}
+\usepackage{braket}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig}
+\usepackage[left=1in, right=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage{float}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE, RO]{42807671 - psycjw}
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	\includegraphics{uonlogo}\par
+	\vfill
+	{\huge Christopher J. Wright \par}
+	\vfill
+	{\huge \textbf{ID:} 42807671\par}
+	{\huge \textbf{Supervisor:} Prof. Thorsten Altenkirch\par}
+	{\huge \textbf{Module:} G53IDS\par}
+	\vfill
+	{\huge 2018/19}
+\end{titlepage}
+\shipout\null
+\thispagestyle{empty}
+\begin{titlepage}
+	\centering
+	\includegraphics{uonlogo}	
+	\vfill
+	{\scshape\large G53IDS Dissertation \par}
+	{\scshape\LARGE Quantum Computing in Haskell \par}
+	\vfill
+	{\large Submitted April 2019, in partial fulfilment of the conditions for the award of the degree BSc Computer Science \par}
+	\vfill
+	{\large \textbf{Author:} 42807671, Christopher J Wright, psycjw \par}
+	{\large \textbf{Supervisor:} Prof. Thorsten Altenkirch, psztxa \par}
+	\vfill
+	{\large School of Computer Science \par University of Nottingham}
+	\vfill
+	{I hereby declare that this dissertation is all my own work, except as indicated in the text.\par}
+	\vfill
+	\begin{flushleft}
+		{\large \textbf{Signature} \par}
+		\vfill
+		{\large \textbf{Date} \hspace{2cm} \today\par}
+	\end{flushleft}
+\end{titlepage}
+\shipout\null
+
+\fancyhead[RE, LO]{ABSTRACT}
+\section*{Abstract}
+Quantum computing is growing daily as new quantum computers are created, and new research is done. There are already many desirable uses of quantum computing, such as factoring integers in $O(log N)$ \cite{shor} and searching unsorted databases in $O(\sqrt{N})$ \cite{grover}. There are even quantum games being created, such as Quantum Battleships \cite{qships}. \par
+As the field expands, more people will find interest in the field and attempt to learn and pursue a career concerning quantum computers, and so suitable learning and experimental platforms need to be present to help this happen. This is the main inspiration for this project; create a stable up-to-date platform for users to run quantum computations on a classical computer via quantum simulation, while also improving my own understanding and experience of the subject for the future.\par
+This dissertation explains the basics of quantum computing, and provides possible methods for the implementation of certain quantum algorithms on a classical computer using Haskell, with a quantum-computation simulating package called QIO \cite{qio}. This package already includes structures necessary for quantum computations, such as the qubit and unitary functions, however does not work on the latest Haskell update (v8.4.3) and lacks complex quantum algorithms. Therefore, the package is first updated, and then 2 quantum algorithms are implemented. Following this, a quantum circuit builder is designed and implemented in the package, allowing users to create and test quantum circuits using a intuitive GUI.\par
+Each part of the project, namely the two algorithms implemented and the circuit builder, is completely separate and functions independantly, and so I split the project up into 3 parts. Each part is designed, implemented, tested and evaluated before moving to the next part - avoiding confusion between parts and ensuring one part is complete before attempting the next.
+\newpage
+
+\fancyhead[RE, LO]{\leftmark}
+\tableofcontents
+\clearpage
+\fancyfoot[CE,CO]{\thepage}
+
+\setcounter{page}{1}
+\section{Introduction to Quantum Computing}
+\subsection{Brief History}
+The idea of a quantum computer was first introduced in a talk in 1981 by Nobel prize-winning physicist Richard P. Feynman. In his talk, reproduced in the \textit{International Journal of Theoretical Physics} in 1982 \cite{feynman}, he proposed that it would be impossible to simulate a quantum system on a classical computer efficiently. At the same time, physicist Paul Benioff demonstrated that quantum mechanical systems can model classical Turing machines \cite{benioff}, and created the first recognizable theoretical framework for a quantum computer. \par
+This resulted in David Deutsch's creation of the first universal quantum computer \cite{deutsch}. This computer could do things that a universal Turing machine cannot, such as generate truly random numbers, and simulate finite physical systems. \par
+Over time, quantum algorithms have been developed which solve problems faster and more efficiently than classical algorithms can, demonstrating the main use for quantum computers. The main examples of such algorithms would be the Deutsch-Jozsa algorithm  \cite{deutsch-jozsa}, Shor's algorithm \cite{shor} and Grover's algorithm \cite{grover}.
+
+\subsection{QIO}
+QIO is a Haskell package built by Alexander S. Green \cite{qio}, which allows users to simulate a quantum computer on their own classical computer. Typical quantum operations are built up of unitary (reversible) functions under a monoid \texttt{U}, and can then be run using a monad \texttt{QIO} and the function \texttt{applyU}. This \texttt{QIO} monad also has functions \texttt{mkQbit} and \texttt{measQbit}, which can be used to create a new qubit and measure an existing qubit respectively.\par
+This leads to an intuitive platform which can be used to create quantum computations, and then run/simulate them with 2 very simple functions \texttt{run :: QIO a -> IO a}  and \texttt{sim :: QIO a -> Prob a}, where \texttt{run} is used to execute a quantum computation and return the value of qubits measured based on their probabilities and a pseudorandom number generator. The \texttt{sim} function is similar, however after executing a quantum computation, it returns the probability distribution for the qubits measured, showing the possible states and their probabilities when measured.\par
+I will use this package to help introduce and teach quantum computing, providing relevent code segments to improve clarity, and create programs to highlight certain features of quantum computations.
+
+\subsection{The Qubit}
+\textit{Note: a lot of this knowledge has been learnt from the G53/4NSC module lectures \cite{nsc}}.\noindent \\ 
+A classical computer uses a bit to store data. This bit can only be in one of two states, 0 or 1. Strings of bits are then used to represent data and instructions, forming the basis of classical computation.\par
+However, a quantum computer uses a quantum bit, known as a qubit. This qubit can simply be in the classical states 0 or 1, or in a superposition of both, i.e., be in both states at once. This means an operation performed on a qubit effectively acts on both 0 and 1 at the same time.\par
+A qubit can be described by a linear combination of $\ket{0}$ and $\ket{1}$, 
+$$\ket{\psi}=\alpha\ket{0} + \beta\ket{1},\quad \alpha,\beta \in \mathbb{C},\quad |\alpha^2| + |\beta^2| = 1$$
+where $ |\alpha^2|$ represents the probability of measuring the $0$ state, and $|\beta^2|$ the $1$ state. Hence the normalization condition $|\alpha^2| + |\beta^2| = 1$. This condition also corresponds to the fact that $\ket{\psi}$ is a unit vector in the complex vector space.\par
+Measuring a qubit will collapse its wave function due to Born's rule \cite{born}. This means that, when measured, a qubit will collapse to be either $\ket{0}$ or $\ket{1}$. For example, if we take the qubit
+$$\ket{+} = \frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}$$
+and measure it, the probability of getting $\ket{0}$ or $\ket{1}$ is $\frac{1}{2}$. We can therefore say that the qubit $\ket{+}$ is in an equal superposition.\par
+In QIO, a qubit is referred to as a \texttt{Qbit}. One can be created simply using the \texttt{mkQbit :: Bool -> QIO Qbit} function mentioned above, and is created based on the boolean value passed in. The function \texttt{measQbit :: Qbit -> QIO Bool} can then later be used to measure the state of the qubit passed in.
+\begin{verbatim}
+make2qubits :: QIO (Bool, Bool)
+make2qubits = do
+    q0 <- mkQbit False -- This will create a qubit, q0, in the state |0>
+    q1 <- mkQbit True -- This will create a qubit, q1, in the state |1>
+    b0 <- measQbit q0 -- This will measure the qubit q0, returning False
+    b1 <- measQbit q1 -- This will measure the qubit q1, returning True
+    return (b0, b1) -- Returns (False, True)
+\end{verbatim}
+Qubit base states can also be represented by matrices, with $\ket{0} = 
+\begin{bmatrix}
+	1 \\ 0
+\end{bmatrix}$
+and $\ket{1} = 
+\begin{bmatrix}
+	0 \\ 1
+\end{bmatrix}$.
+The qubit $\ket{\psi}$ above can be rewritten, introducing a multiplier known as the global phase, making the coefficient for $\ket{0}$ (i.e., $\alpha$) real and non-negative. For example, the state $\frac{-i}{\sqrt{2}}\ket{0} + \frac{i}{\sqrt{2}}\ket{1}$ is the same as  $\frac{1}{\sqrt{2}}\ket{0} + \frac{-1}{\sqrt{2}}\ket{1}$ with a global phase of $-i$. This global phase does not affect the amplitudes of the states, and so doesn't change the qubit's value when measured.\par
+This qubit state $\ket{\psi}=\alpha'\ket{0} + \beta'\ket{1}$  can now be written in the form
+$$\ket{\psi} = \cos(\frac{\theta}{2})\ket{0} + e^{i\phi}\sin(\frac{\theta}{2})\ket{1},\qquad \theta = 2\cos^{-1}(\alpha'), \quad \phi = \Im(\ln(\frac{\beta'}{\sin(\frac{\theta}{2})}),$$
+$$0 \leq \theta \leq \pi,\quad 0 \leq \phi \leq 2\pi$$
+From this, it is easy to see that a qubit can be represented geometrically using the angles $\theta$ and $\phi$, on what is known as the Bloch sphere.
+
+\subsection{The Bloch Sphere}
+The Bloch sphere, named after physicist Felix Bloch, is a geometrical representation of a two-state quantum mechanical system (e.g. a qubit). As shown above, a qubit's coefficients can be expressed in terms of 2 angles, $\theta$ and $\phi$. This makes it extremely easy to see what happens when operations are performed on qubits, and it is clear that a qubit pointing to a point above the origin has a higher $\ket{0}$ amplitude than $\ket{1}$, and vice versa.\par
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{blochsphere}
+	\caption{A Qubit represented geometrically on the Bloch Sphere}
+\end{figure}
+We can calculate the angle $\theta$ using QIO's underlying structure and the \texttt{sim} function. The angle $\phi$ cannot be calculated in this way, as we use the probabilities for each state for the calculation.\par
+The \texttt{sim} function returns a value of type \texttt{Prob a}, where \texttt{a} is given by the quantum computation it is applied to (i.e. applying \texttt{sim} to a function of type \texttt{QIO Bool}, will return a value of type \texttt{Prob Bool}). This \texttt{Prob} type is simply a wrapper around vectors given by real probabilities, defined in the \texttt{Qio.hs} file:
+\begin{verbatim}
+data Prob a = Prob {unProb :: Vec RR a}
+\end{verbatim}
+where \texttt{RR} is simply a \texttt{Double} value, and \texttt{Vec} is a wrapper around a list of pairs, defined in the \texttt{Vec.hs} file:
+\begin{verbatim}
+newtype Vec x a = Vec {unVec :: [(a,x)]} deriving Show
+\end{verbatim}
+From this, it is easy to see that
+\begin{verbatim}
+Prob Bool = Prob {unProb :: Vec RR Bool} 
+          = Prob {unProb :: Vec {unVec :: [(Bool, Double)]}}
+\end{verbatim}
+Now, we can extract the probabilities for qubits, and calculate $\theta$.
+\begin{verbatim}
+quantum :: QIO Bool
+quantum = do
+    q <- mkQbit True
+    measQbit q
+    
+theta :: QIO Bool -> Double
+theta c = 2 * (acos alpha)
+    where
+        ps = unVec $ unProb $ sim c
+        alpha = sqrt $ snd $ last ps
+\end{verbatim}
+The function \texttt{quantum} can be changed to perform any operation on the qubit, and as long as the function's type does not change, then \texttt{theta quantum} will always return $\theta$ for the qubit measured. E.g.
+\begin{verbatim}
+quantum :: QIO Bool        -> theta quantum = 3.141592653589793
+quantum = do
+    q <- mkQbit True
+    measQbit q
+
+quantum :: QIO Bool        -> theta quantum = 0.0
+quantum = do
+    q <- mkQbit False
+    measQbit q
+
+quantum :: QIO Bool        -> theta quantum = 1.5707963267948966
+quantum = do
+    q <- mkQbit False
+    applyU (uhad q)
+    measQbit q
+\end{verbatim}
+
+\subsection{Decoherence}
+Put simply, decoherence is the loss of coherence. This basically means that the quantum state described by a system is no longer in superposition, and leads to a collapse of the wave function. If this occurs during a computation, all information stored in qubits is lost, and the computation needs to be restarted. Decoherence can occur naturally after a certain amount of time as the system will be entangled with its environment \cite{decoherence}, and is the main problem quantum computing faces.
+
+\subsection{Basic Operations}
+\subsubsection{1-Qubit Gates}
+A 1-qubit gate can be thought of as a rotation about the Bloch sphere, and as the state space of a qubit is continuous, there are an infinite amount of 1-qubit gates. Any complex unitary 2x2 matrix represents a 1-qubit gate, and there are 4 main 1-qubit gates: the Hadamard gate, and the 3 Pauli- gates. Note that all quantum gates must be unitary (i.e., is its own inverse).\par
+As mentioned earlier in section 1.2, QIO uses a monoid \texttt{U} to form unitary functions. These functions are defined as 5 distinct forms, using recursion to create sequences of functions:
+\begin{verbatim}
+data U = UReturn
+       | Rot Qbit Rotation U
+       | Swap Qbit Qbit U
+       | Cond Qbit (Bool -> U) U
+       | Ulet Bool (Qbit -> U) U
+\end{verbatim}
+\texttt{UReturn} is simply an empty function, and will always be the last unitary in a sequence. For this section on 1-Qubit gates, the \texttt{Rot Qbit Rotation U} form is used. QIO defines all single qubit gates as rotations, where a \texttt{Rotation :: ((Bool, Bool) -> CC)} represents the 2x2 matrix of the gate. The \texttt{rot} function is then used to create a unitary function for a given \texttt{Rotation} and qubit.
+\begin{verbatim}
+rot :: Qbit -> Rotation -> U
+rot x r = Rot x r UReturn
+\end{verbatim}
+
+\paragraph{The Hadamard Gate}
+Named after French mathematician Jacques Hadamard, the Hadamard gate (also called the Hadamard rotation) takes the base states $\ket{0}$ and $\ket{1}$ into equal superpositions
+$$\ket{0} \mapsto \frac{1}{\sqrt{2}}(\ket{0} + \ket{1}) = \ket{+}$$
+$$\ket{1} \mapsto \frac{1}{\sqrt{2}}(\ket{0} - \ket{1}) = \ket{-}$$
+and has the matrix $\frac{1}{\sqrt{2}} 
+\begin{bmatrix}
+	1 & 1 \\
+	1 & -1 
+\end{bmatrix} $.
+It is equivalent to the combination of 2 rotations: $\pi$ about the Z-axis, followed by $\pi/2$ about the Y-axis.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{hadamard}
+	\caption{The Hadamard Gate}
+\end{figure}
+The gate matrix (i.e. \texttt{Rotation}) is given by \texttt{rhad} in the \texttt{QioSyn.hs} file, along with the unitary function \texttt{uhad} which can be used via the \texttt{applyU} function.
+\begin{verbatim}
+rhad :: Rotation
+rhad (x,y) = if x && y then -h else h where h = (1/sqrt 2)
+
+uhad :: Qbit -> U
+uhad x = rot x rhad
+
+applyHadamard :: QIO Bool
+applyHadamard = do
+    q <- mkQbit False
+    applyU (uhad q)
+    measQbit q
+\end{verbatim}
+
+\paragraph{The Pauli- Gates}
+The Pauli- gates, created by Wolfgang Pauli, correspond to a rotation of $\pi$ about one of the 3 axis, and so there are 3 - Pauli-X, Pauli-Y and Pauli-Z (often abbreviated to X, Y and Z respectively). The Pauli-X gate is most common, as it is the equivalent of a classical NOT gate.
+
+$$
+X = 
+\begin{bmatrix}
+	0 & 1 \\
+	1 & 0
+\end{bmatrix},
+\quad Y =
+\begin{bmatrix}
+	0 & -i \\
+	i & 0
+\end{bmatrix},
+\quad Z =
+\begin{bmatrix}
+	1 & 0 \\
+	0 & -1
+\end{bmatrix}$$
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{not}
+	\includegraphics[width=0.18\textwidth]{paulix}
+	\caption{The 2 representations of the Pauli-X (NOT) Gate}
+\end{figure}
+The Pauli-X gate is defined in QIO using the \texttt{rnot Rotation} and the unitary \texttt{unot}. However, these gates can be created simply by first creating the corresponding \texttt{Rotation} matrix, and then using the \texttt{rot} function similar to how the Hadamard gate is defined.
+
+\begin{verbatim}
+rX :: Rotation
+rX (x,y) = if x==y then 0 else 1
+
+rY :: Rotation
+rY (False, True) = 0 :+ 1
+rY (True, False) = 0 :+ (-1)
+rY (_, _) = 0
+
+rZ :: Rotation
+rZ (False, False) = 1
+rZ (True, True) = -1
+rZ (_, _) = 0
+
+uX :: Qbit -> U
+uX q = rot q rX
+
+uY :: Qbit -> U
+uY q = rot q rY
+
+uZ :: Qbit -> U
+uZ q = rot q rZ
+\end{verbatim}
+
+\subsubsection{n-Qubit Gates}
+Alongside the gates above, there are 3 other basic quantum gates; Controlled-X, SWAP and Toffoli, which are defined in QIO using the other 3 constructs for \texttt{U}.
+
+\paragraph{The SWAP Gate}
+This gate is extremely simply; it just swaps 2 qubits. In QIO, it is defined by the \texttt{swap} function.
+\begin{verbatim}
+swap :: Qbit -> Qbit -> U
+swap x y = Swap x y UReturn
+\end{verbatim}
+
+\paragraph{The Controlled-X Gate}
+The most common 2-qubit gate, it applies the Pauli-X gate (i.e., a NOT gate) on the second qubit if and only if the first qubit is $\ket{1}$. It is often called the Controlled-NOT or cNOT gate. Note that we can do the same with the other Pauli- gates, however this is rarely used.\par
+The gate is defined using the \texttt{Cond Qbit (Bool -> U) U} unitary construct, and the function \texttt{cond} which creates the unitary (similar to the functions \texttt{rot} and \texttt{swap} above). Essentially, when given a qubit and a unitary function which takes in a boolean, the resulting unitary will apply the boolean function to the states the qubit can be in.\par
+This is best demonstrated with an implementation for the cNOT gate. If the qubit is measured to be \texttt{True} (i.e. in the $\ket{1}$ state), then the resulting unitary is a NOT gate. Otherwise, nothing will be done and the resulting unitary is empty.
+\begin{verbatim}
+cond :: Qbit -> (Bool -> U) -> U
+cond x br = Cond x br UReturn
+
+cnot :: Qbit -> Qbit -> U
+cnot qc qo = cond qc (\x -> if x then (unot qo) else mempty)
+\end{verbatim}
+
+\paragraph{The Toffoli Gate}
+This gate acts on 3 qubits, and is often called the ccNOT gate. This is because it applies the Pauli-X gate on the third qubit if and only if the first two qubits are both $\ket{1}$. 
+\begin{verbatim}
+toffoli :: Qbit -> Qbit -> Qbit -> U
+toffoli q1 q2 qo = cond q1 (\x -> if x then (cnot q2 qo) else mempty)
+\end{verbatim}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{swap}
+	\includegraphics[width=0.25\textwidth]{cnot}
+	\includegraphics[width=0.25\textwidth]{toffoli}
+	\caption{The SWAP gate (left), the Controlled-X (cNOT) gate (middle), and the Toffoli gate (right)}
+\end{figure}
+
+\paragraph{The $C^n$-NOT Gate}
+The idea behind the Toffoli gate above (multiple control qubits, and one output qubit) can be extended to any arbitrary amount, creating a $c^n$-NOT gate. From the definition of the Toffoli gate in QIO above, it is clear that we can define a gate in QIO which acts on a list of control qubits, and one output qubit.
+\begin{verbatim}
+cNnot :: [Qbit] -> U
+cNnot [] = mempty
+cNnot (q:qs) = cond q (\x -> if x then (cNnot qs) else mempty)
+\end{verbatim}
+However, this only works due to how QIO operates on qubits. On a quantum computer, a gate like this will require a sequence of toffoli gates and ancilla qubits. For example, the cccNOT gate requires an extra ancilla qubit:
+\begin{verbatim}
+cccNot :: Qbit -> Qbit -> Qbit -> Qbit -> Qbit -> U
+cccNot q1 q2 q3 q4 qa = 
+    toffoli q1 q2 qa <>
+    toffoli q3 qa q4 <>
+    toffoli q1 q2 qa
+\end{verbatim}
+\begin{figure}[H]
+	\centering
+	\theverbbox\qquad
+	\includegraphics[width=0.25\textwidth]{cccnot}
+	\caption{The cccNOT gate, made using toffoli gates and an ancilla qubit, where $\ket{qo} = \ket{q_4 \oplus (q_1 q_2 q_3)}$}
+\end{figure}
+When using ancilla qubits in QIO, we can use the unitary construct \texttt{Ulet} and the function \texttt{ulet}.
+\begin{verbatim}
+ulet :: Bool -> (Qbit -> U) -> U
+ulet b ux = Ulet b ux UReturn
+\end{verbatim}
+This construct will create a qubit in the state given by the boolean, for use in the given unitary. We can now execute the cccNot gate defined above. The qubit \texttt{q4} will be set to $\ket{1}$ if and only if \texttt{q1, q2} and \texttt{q3} are all in the state $\ket{1}$.
+\begin{verbatim}
+doCccNOT :: QIO Bool
+doCccNOT = do
+    q1 <- mkQbit True
+    q2 <- mkQbit True
+    q3 <- mkQbit True
+    q4 <- mkQbit False
+    applyU (ulet False (cccNot q1 q2 q3 q4))
+    measQbit q4
+\end{verbatim}
+
+\subsection{Entanglement}
+Quantum entanglement is a phenomenon that occurs when the value of one qubit affects another, and forms a large part of many quantum algorithms. As mentioned above, when we measure a qubit it collapses to one of its base states. If another qubit depends on this measured qubit (e.g., via a cNOT gate), then it will also collapse to one of the base states. The 2 qubits are then said to be entangled. \par
+Consider a circuit which starts with two qubits \textit{Alice} and \textit{Bob}, both starting in the state $\ket{0}$. We then apply the Hadamard gate to \textit{Alice}, converting \textit{Alice} into an equal superpositional state of the base states $\ket{+} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$, meaning there is a 50/50 chance of \textit{Alice} being 0/1 when measured. Next, we apply a cNOT gate to \textit{Alice} and \textit{Bob}, entangling the two qubits together. Therefore, if we measure \textit{Alice} to be $\ket{0}$, then \textit{Bob} will collapse to the state $\ket{0}$, and the same will occur for the state $\ket{1}$. As entanglement is non-local, \textit{Alice} and \textit{Bob} could be separated by any distance, and this will still occur.\par
+This can be implemented in QIO using the \texttt{uhad} and \texttt{cnot} defined earlier. The function \texttt{entangle} below will create 2 qubits, \texttt{qa} and \texttt{qb}, and initialize them in the $\ket{0}$ state. We then apply the Hadamard gate to qa, changing its state to $\frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$. We then apply a controlled-X unitary function, concatenated simply with the mappend operator \texttt{<>}. When run using the \texttt{run} function, \texttt{[True, True]} or \texttt{[False, False]} will be returned due to the entanglement. The \texttt{sim} function will return \texttt{([True, True], 0.5), ([False, False], 0.5)}.\par
+\begin{verbatim}
+entangle :: QIO [Bool]
+entangle = do
+    qa <- mkQbit False
+    qb <- mkQbit False
+    applyU (uhad qa <> cnot qa qb)
+    ba <- measQbit qa
+    bb <- measQbit qb
+    return [ba, bb]
+\end{verbatim}
+
+\subsection{The Bell States}
+The two qubits shown above, \textit{Alice} and \textit{Bob}, together form a Bell state, named after physicist John S. Bell
+$$\ket{\Psi_{00}} = \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{11} = \frac{1}{\sqrt{2}}(\ket{00} + \ket{11})$$
+As evident from the equation, if one of the qubits is measured to be $\ket{0}$ or $\ket{1}$, then so is the other. There are 4 Bell states, where each state has 2 entangled qubits, and the measurement of one qubit collapses the state of the other.
+$$\ket{\Psi_{00}} = \frac{1}{\sqrt{2}}(\ket{00} + \ket{11}) \quad \ket{\Psi_{01}} = \frac{1}{\sqrt{2}}(\ket{01} + \ket{10})$$
+$$\ket{\Psi_{10}} = \frac{1}{\sqrt{2}}(\ket{00} - \ket{11}) \quad \ket{\Psi_{11}} = \frac{1}{\sqrt{2}}(\ket{01} - \ket{10})$$
+Each Bell state is created using the same unitary operation, namely a Hadamard gate on the first qubit, and then a cNOT to the second qubit using the first qubit as the control bit, with the resulting Bell state determined by the original state of the 2 qubits.
+
+\section{Motivations}
+\subsection{Problems}
+A quantum computer consists of multiple two-level quantum-mechanical systems, such as multiple electrons, with each electron represents a qubit. The spin of the electron determines the qubit state, with spin up representing $\ket{0}$ and spin down representing $\ket{1}$. The main problem faced here is decoherence \cite{decoherence2}. The overall system is extremely sensitive to interaction with the surroundings, such as magnetic fields affecting electrons, and must be isolated from its environment. The more qubits we have, the harder it is to maintain coherence.\par
+Due to the difficulties of creating a quantum computer, we need to be able to simulate one on a classical computer. This simulation will not be as efficient as a quantum computer, and so its main use is the testing and creation of quantum algorithms, alongside teaching quantum computing. This means there is a high demand in quantum computing simulators, hence the need for projects like this.
+
+\subsection{Simulators}
+As mentioned above, creating a stable and effective quantum computer is difficult, and so while new ways of implementation are being researched, we can use quantum simulators to create, test and teach quantum computing. As quantum computing grows even larger, simulators need to be available to people in order to help them learn about quantum computations and programs. More quantum simulators across different programming languages will supply a wider range of programmers the ability to practice quantum computing on their own computer, as well as offer different methods of implementing a quantum simulator.\par
+This project aims to add to this group of quantum simulators, offering an up-to-date and reliable Haskell package which enables users to create and run quantum programs. On top of this, they will be able to run quantum algorithms over their own data sets, increasing the teaching ability of the project.
+
+\section{Related Work}
+\subsection{IBM Q}
+The IBM Q Experience is an online platform \cite{ibmqexperience} - found easily with a Google search "ibm q" - which gives its users access to a set of prototype quantum processors. Users can create quantum circuits or programs via a graphical or textual interface, and then either run these quantum operations on an actual quantum computer, or simulate them classically.\par
+It was launched by IBM in 2016 \cite{ibmlaunch}, and started with a 5 qubit quantum processor and matching simulator, alongside a small set of two-qubit operations. Over time, the platform has evolved into a strong stable quantum platform, with the addition of more 2-qubit operations, a simulator over a maximum of 20 qubits and limited beta access to a 16 qubit quantum processor. IBM also released a python-based quantum computing framework, QISKit \cite{qiskit}, allowing users to simulate a quantum computer offline, or run quantum programs on the real IBM quantum processors online.
+
+\subsubsection{Evaluation}
+In my opinion, the IBM Q Experience platform is perfect for all who wish to create quantum programs and just generally experiment with quantum computing. A colourful, intuitive graphical interface can be used to build quantum circuits and then run/simulated with ease - perfect for new users. This still works great for more advanced users, however the textual interface is more suited for advanced use. Complex quantum programs can be created instead of circuits, and the use of the QISKit framework enables users the option of creating and simulating quantum computations without the online platform. \par
+There are also two user guides, a Beginner's guide and Full guide, which help diminish the difficulty in learning the basics of quantum computing without confusing newcomers. The Beginner's guide briefly explains the qubit, and common single qubit gates. It then goes on to hint at some multi qubit gates, and explain the process of entanglement and how it can be used. The Full guide extends these sections, providing a greater depth of knowledge concerning the qubit, such as the Bloch sphere and decoherence. It also goes into more detail on single and multi qubit gates, alongside descriptions of quantum algorithms and some quantum error correction methods. More help is then available to users via a community forum and in-depth QISKit tutorials, ensuring users can find solutions to any problems they are having.
+
+\subsubsection{Key Points}
+\begin{enumerate}
+	\item Simple and effective graphical user interface, allowing the user to drag-and-drop quantum gates onto a circuit, with bright colours used to emphasize different gates.
+	\item Basic textual interface, providing users with an interface they can use to build more complex quantum programs.
+	\item Multiple user guides to help teach newcomers without confusing them, while still providing aid to more advanced users. 
+	\item Emphasis placed on usability.
+\end{enumerate}
+
+\section{Project Description}
+\subsection{Aim}
+The aim of this project is to update and improve an out-of-date Quantum computing package in Haskell, QIO - developed by Green and Altenkirch. This will result in an updated, stable package for Haskell v8.4.3, allowing users to simulate a quantum computer, and run various quantum algorithms. It will also provide the user a graphical interface to build and run quantum circuits. \par
+This QIO Haskell package allows a user to create a quantum program, and then run or simulate it. By running, any qubits measured via a function \texttt{measQbit :: Qbit -> QIO Bool} will be collapsed into True or False based on their probability amplitudes and a pseudorandom number generator. However, the difference between this package and others is revealed when we simulate the program instead. Then, any qubits measured will be shown as their probabilities, including multiple qubits together. From this we can easily check the program for errors.\par
+The package is currently not working in Haskell v8.4.3, and so first needs to be updated. The update will need to maintain the quantum aspects necessary for quantum computation, such as coherence and the no-cloning theorem, and still be able to run/simulate quantum programs inputted. \par
+Following this, two quantum algorithms (Grover's and Shor's) will be implemented in the package, allowing users to run these algorithms on their own data. There is already an implementation of Shor's algorithm present in QIO, but this needs to be updated. Each implementation will be in a separate Haskell file, and be able to perform a quantum algorithm correctly over its inputs using the rest of the QIO package.\par
+Finally, a quantum circuit builder/interpreter will be built. It will display a graphical interface, and allow the user to drag-and-drop quantum gates onto a circuit of any amount of qubits. It will then display the resulting amplitude(s) and/or value(s) of any of the qubits. This will be similar to the IBM Q Program specified above, only shall be run on a classical computer instead of a quantum one.
+
+\subsection{Algorithms}
+\subsubsection{Grover's algorithm}
+In 1996, Lov K. Grover demonstrated an algorithm which could search a quantum mechanical database quickly \cite{grover}. This quantum algorithm is quadratically faster than the fastest classical variant, returning the index of the search item in $O(\sqrt{n})$, instead of the classical $O(n)$. It can also be generalized to find solutions to an unknown predicate function $f$ in the same time.\par
+The algorithm takes a function $f$, and after converting it into a unitary function, runs it over a set of qubits representing the data set to search. It then stores the result in a separate qubit (called $qr$), and rotates the phase of this qubit, negating the amplitude of the solution state. The reverse of the function is then run, and the qubits dispersed. This dispersion acts as an inversion around the mean amplitude, meaning the solution state is amplified due to the previous negation. When run $\log_2 n$ times, the solution will be given by measuring the qubits as long as the qubit $qr$ is measured to be True. This will happen most of the time, however it will not always be correct due to the probabilistic nature of quantum computation.
+
+\subsubsection{Shor's algorithm}
+Before Grover's algorithm, there was Shor's algorithm for integer factorization. This quantum algorithm is used to find the factors of any integer $N$ in ~$O((log N)^3)$ \cite{shorcomplexity}. The algorithm specifically looks at the case of factorizing an integer $N = pq$, where $p$ and $q$ are both large primes. It claims that if an integer $b$ shares no factors with $N$ then $b^r = 1 mod N$ for some integer $r$, and the function $f(x) = b^x mod N$ is a periodic function of $x$ with period $r$.\par
+Finding $b$ is simply done by taking a random number co-prime to $N$. If the period $r$ is then even, we can then calculate 
+$$x = b^{\frac{r}{2}} mod N$$
+Following this, if $x + 1 \neq 0 mod N$ we can factorize the input. The probability of choosing a random $b$ which gives a period $r$ with these properties is $\geq 0.5$.\par
+After constructing a unitary function $U_{f(x)} = b^x mod N$, the algorithm applies it over an input state, leaving an equal superpositional state 
+$$\frac{1}{\sqrt{2^n}}\sum_{K=0}^{2^n-1} \ket{K}_n \ket{b^K mod N}_m$$
+$$m =\log_2 N,\quad n = 2m + 1 + \log_2(2 + \frac{1}{2\varepsilon}),\quad 0 < \varepsilon \leq 1$$
+where $\varepsilon$ is the maximum allowable error probability. We can then measure the second register, which will give any value for $b^x mod N$, leaving the first register in an equal superposition over the values for $x$. The algorithm then applies the inverse Quantum Fourier Transformation (QFT), leaving the first register in a state approximately equal to $\ket{s}$, where $\frac{s}{2^n-1} = \frac{s'}{r}$. Finally, we can check if $r$ is even and if $x + 1 \neq 0 mod N$ where $x = b^r mod N$, and if they are both true, then $N$ has factors $(x-1)$ and $(x+1)$. We can then find the greatest common denominators of both in $N$, and return the largest prime factors of $N$.
+
+\section{Current QIO}
+QIO currently uses a HeapMap to store the states of the qubits in the system, and a Qbit type which just acts as an integer reference to this map. Unitary functions take the form of a monoid "Unitary", and represent an operation on the HeapMap and may produce a new state. We can then restrict unitary functions to be in a few forms, ensuring the functions are indeed unitary - a necessity for quantum computations. These forms are defined in a datatype "U" shown below.
+\begin{verbatim}
+data U = UReturn 
+       | Rot Qbit Rotation U 
+       | Swap Qbit Qbit U 
+       | Cond Qbit (Bool -> U) U 
+       | Ulet Bool (Qbit -> U) U
+\end{verbatim}
+
+Using recursion, this new type is what a unitary operation will be; a string of rotations, swaps, conds and lets, ending in a UReturn. From these 4 operations, we can build any unitary operation possible, and as "U" is also defined as a monoid, we can easily concatenate operations together. Following this, the package defines another datatype "QIO a", which is the type that a quantum computation will take:
+\begin{verbatim}
+data QIO a = QReturn a 
+           | MkQbit Bool (Qbit -> QIO a) 
+           | ApplyU U (QIO a) 
+           | Meas Qbit (Bool -> QIO a)
+\end{verbatim}
+This datatype enables us to create and measure Qbits, along with applying unitary operations to them, with a monadic structure.\par
+From all this, we can build a quantum program which creates qubits in an initial base state (i.e., either $\ket{0}$ or $\ket{1}$), applies any amount of unitary functions to them, and then measures qubits. Now we need to let the user execute a quantum program on a simulated quantum system. To do this, QIO has 2 functions: \texttt{run :: QIO a $\to$ IO a} and \texttt{sim :: QIO a $\to$ Prob a}. Run takes a quantum computation in the type defined above, and executes it on a simulated quantum system. When qubits are measured and returned in the computation, the function prints this state value to the console using the IO monad. The state value to return will originally be a quantum state, and so is made up of probability amplitudes. Therefore, the actual state to return will be chosen at random based on these probability amplitudes and a psuedorandom number generator.\par
+Sim is a bit different to run. It still takes a quantum computation and executes it, however it returns the actual probabilities of the possible states the qubits measured may be in. This makes testing quantum programs pretty simple, increasing the usability of the project. 
+
+\section{Updating QIO}
+\subsection{Current Errors}
+Currently, QIO cannot be installed on the latest Haskell version (v8.4.3). This is because the package depends on the Haskell base package version being $\geq 4.9 \&\& < 4.10$. After downloading the package, and manually changing this to allow any base package $\geq 4.9$, a two errors are shown depicting what is incorrect with the current QIO structure.\par
+\begin{verbatim}
+QIO/QioSyn.hs:39:10: error:
+        * No instance for (Semigroup U)
+            arising from the superclasses of an instance declaration
+        * In the instance declaration for `Monoid U'
+...
+QIO/QioSynAlt.hs:118:10: error:
+        * No instance for (Semigroup U)
+            arising from the superclasses of an instance declaration
+        * In the instance declaration for `Monoid U'
+\end{verbatim}
+
+\subsection{Fixing Errors}
+From the error messages presented, it is clear that a change to Monoids is causing errors. In base-4.11.0.0, the Haskell Semigroup class is made a superclass of Monoid \cite{base411}, and so this is most likely the cause. This means that a Semigroup instance for \texttt{U} needs to be defined, along with the Monoid instance.\par
+The current definition for \texttt{U} in QioSyn.hs is shown below
+\begin{verbatim}
+instance Monoid U where
+        mempty = UReturn
+        mappend UReturn u = u
+        mappend (Rot x a u) u' = Rot x a (mappend u u')
+        mappend (Swap x y u) u' = Swap x y (mappend u u')
+        mappend (Cond x br u') u'' = Cond x br (mappend u' u'')
+        mappend (Ulet b f u) u' = Ulet b f (mappend u u') 
+\end{verbatim}
+All that needs to be done to fix this is to include a Semigroup definition for \texttt{U} which defines the structure for executing multiple unitary functions, and then to define mempty and mappend for the Monoid instance.
+\begin{verbatim}
+instance Semigroup U where
+        UReturn <> u
+        (Rot x a u) <> u' = Rot x a (u <> u')
+        (Swap x y u) <> u' = Swap x y (u <> u')
+        (Cond x br u') <> u'' = Cond x br (u' <> u'')
+        (Ulet b f u) <> u' = Ulet b f (u <> u')
+        
+instance Monoid U where
+        mempty = UReturn
+        mappend = (<>)
+\end{verbatim}\par
+After this, the alternate file QioSynAlt.hs needs to be updated also. The definition for \texttt{U} is very similar, however uses a non-recursive datatype in its definition. The current code is shown below:
+\begin{verbatim}
+instance Monoid U where
+        mempty = Fx UReturn
+        mappend (Fx UReturn) u = u
+        mappend (Fx (Rot x a u)) u' = Fx $ Rot x a (mappend u u')
+        mappend (Fx (Swap x y u)) u' = Fx $ Swap x y (mappend u u')
+        mappend (Fx (Cond x br u')) u'' = Fx $ Cond x br (mappend u' u'')
+        mappend (Fx (Ulet b f u)) u' = Fx $ Ulet b f (mappend u u') 
+\end{verbatim}
+The fix for this is very similar to before:
+\begin{verbatim}
+instance Semigroup U where
+        (Fx UReturn) <> u = u
+        (Fx (Rot x a u)) <> u' = Fx $ Rot x a (u <> u')
+        (Fx (Swap x y u)) <> u' = Fx $ Swap x y (u <> u')
+        (Fx (Cond x br u')) <> u'' = Fx $ Cond x br (u' <> u'')
+        (Fx (Ulet b f u)) <> u' = Fx $ Ulet b f (u <> u') 
+        
+instance Monoid U where
+        mempty = Fx UReturn
+        mappend = (<>)
+\end{verbatim}\par
+
+\subsection{New Errors}
+After updating the files, the package produces 2 new error messages when attempting to build, and the previous errors do not show. The same errors are occuring (lack of a Semigroup instance) but for different files, QioClass.hs and Qio.hs.
+\begin{verbatim}
+QIO/QioClass.hs:17:10: error:
+        * No instance for (Semigroup UnitaryC)
+            arising from the superclasses of an instance declaration
+        * In the instance declaration for `Monoid UnitaryC'
+...
+QIO/Qio.hs:32:10: error:
+        * No instance for (Semigroup Unitary)
+            arising from the superclasses of an instance declaration
+        * In the instance declaration for `Monoid Unitary'
+\end{verbatim}
+Therefore, the fixes are the same as before: create a definition for a Semigroup instance based on the previous Monoid instance, then define mempty and mappend in the Monoid definition. The current code is shown below
+\begin{verbatim}
+instance Monoid UnitaryC where
+        mempty = U (\ fv bs -> bs)
+        mappend (U f) (U g) = U (\ fv h -> g fv (f fv h))
+\end{verbatim}
+Which then becomes
+\begin{verbatim}
+instance Semigroup UnitaryC where
+         (U f) <> (U g) = U (\ fv h -> g fv (f fv h))
+        
+instance Monoid UnitaryC where
+        mempty = U (\ fv bs -> bs)
+        mappend = (<>)
+\end{verbatim}
+Finally, the Qio.hs file needs to be changed.
+\begin{verbatim}
+instance Monoid Unitary where
+        mempty = U (\ fv h -> unEmbed $ return h)
+        mappend (U f) (U g) = U (\ fv h -> unEmbed $ do h' <- Embed $ f fv h
+                                                        h'' <- Embed $ g fv h'
+                                                        return h'')
+\end{verbatim}
+Even though this definition is more complex than before, the idea for the change still remains, shown below.
+\begin{verbatim}
+instance Semigroup Unitary where
+        (U f) <> (U g) = U (\ fv h -> unEmbed $ do h' <- Embed $ f fv h
+                                                   h'' <- Embed $ g fv h'
+                                                   return h'')
+                                                
+instance Monoid Unitary where
+        mempty = U (\ fv h -> unEmbed $ return h)
+        mappend = (<>)
+\end{verbatim}
+
+\subsection{Testing}
+After updating QioClass.hs and Qio.hs, the package builds and installs successfully onto Haskell v8.4.3. \textit{Note: The package still installs and runs correctly on the newest version of Haskell, namely v8.6.3.} Running various quantum programs using the updated package gives correct results, and so it the package still works as intended after being updated, and so all that is left to do is change the base dependancy of the package to $\geq 4.11$.\clearpage
+
+\section{Algorithms}
+\subsection{Grover's Algorithm}
+In order to find a solution to a blackbox function - which returns 1 for a solution input, and 0 otherwise - a classical computer must repeatedly apply the function to random integers in order to find the solution, and so is $O(N)$. However, a quantum computer can find a solution to the function after applying it no greater than $\pi/4\sqrt{N}$ times, with a probability of success close to 1 when N is large\cite{qscbook} \textit{(Page 88)}. While the algorithm works for all functions which produce either 0 or 1 based on the input, it is often thought of as just an algorithm which searches through an unsorted database faster than any classical method - however this is just one of its uses. \par
+Put simply, Grover's algorithm takes in a blackbox function, creates a superposition over all possible function inputs and then removes states that are not solutions. After doing this a certain amount of times, there is a high probability that a solution state is found. The algorithm can be split up into multiple explicit parts:
+\begin{enumerate}
+	\item \textbf{The Oracle} -  Creating a unitary function based on the blackbox function, and applying it to a set of qubits.
+	\item \textbf{Diffusion} - Increasing the amplitude of solutional state(s).
+	\item \textbf{Measurement} - Measuring specific qubits to get a solution.
+\end{enumerate}
+\par
+\paragraph{The Oracle}
+The function $f$ simply returns 0 or 1 based on if the inputted value (i.e. an $n$-bit integer) $x$ is the solution $a$;
+$$f(x) = 0, \quad x \neq a \qquad f(x) = 1, \quad x = a.$$
+This function can be represented in the form of a unitary function $U_f$, which acts on an $n$-qubit register containing $x$, and a single qubit register containing the result $f(x)$.
+$$U_f(\ket{x}_n\ket{y}) = \ket{x}_n\ket{y \oplus f(x)}$$
+A simple example of this would be a unitary function which returns 1 when 0010 is inputted, and 0 otherwise:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{oracle0010}
+	\caption{A unitary function, setting the last qubit to 1 when 0010 is inputted, and 0 otherwise}
+\end{figure}
+
+This can be modified so that the overall state's sign is changed if $x = a$ by first setting the output qubit to $\ket{1}$ and applying the Hadamard gate to it before the application of $U_f$. So, the output qubit is in the state $H\ket{1} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$ before application, and after applying $U_f$ the overall state becomes
+$$U_f(\ket{x} \oplus H\ket{1}) = (-1)^{f(x)}\ket{x} \oplus H\ket{1}$$
+Therefore, applying $U_f$ is the same as doing nothing to the single output qubit, and applying a unitary transformation $V$ to the input register:
+\begin{equation}
+	V\ket{x} = (-1)^{f(x)}\ket{x} = \begin{cases}
+		\ket{x}, \quad x \neq a,\\
+		-\ket{a}, \quad x = a.
+	\end{cases}
+\end{equation}
+
+If we initially transform the n-qubit input register into a uniform superposition of all possible inputs,
+$$\ket{\phi} = H^{\oplus n}\ket{0}_n = \frac{1}{2^{n/2}}\sum_{x=0}^{2^n-1}\ket{x}_n$$
+Then, after applying $V$, the component we are looking for (i.e. $\ket{a}$) will have a negative phase. The unitary $V$ can therefore be written as
+$$V = 1 - 2\bra{a}\ket{a}$$
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{oracle00102}
+	\caption{Applying $V$ to an equal superposition of all possible inputs.}
+\end{figure}
+
+\paragraph{Diffusion}
+Grover's algorithm requires one more unitary $W$, which does not depend on the oracle function. This unitary transformation changes the sign of the component orthogonal to $\ket{\phi}$:
+$$W = 2\bra{\phi}\ket{\phi} - 1$$
+It is easier to construct the unitary $-W$, and only changes the sign of the final state.
+
+
+
+\subsubsection{Design}
+
+\subsubsection{Implementation}
+
+\subsubsection{Testing}
+
+
+\subsection{Shor's Algorithm}
+\subsubsection{Design}
+
+\subsubsection{Implementation}
+
+\subsubsection{Testing}
+
+\section{Quantum Circuit Builder}
+\subsection{Design}
+
+\subsection{Implementation}
+
+\subsection{Testing}
+
+
+\section{Reflections}
+I overestimated how much time would be required to fix the current QIO library. This is because I had not looked into why QIO wasn't working, and so expected more problems; but I'd rather overestimate than underestimate. After starting developing Grover's algorithm, with a complete quantum algorithm being expected by the end of the year, I have realized how hard the implementations actually are to create. I expected the research to give easy implementations that just need to be tailored to functional programming. However, I did not think about the need to change researched implementations so that they also work in the QIO library. \par
+Finally, as I will be testing each base component of implementations, the probability of errors occurring when the overall function is tested will be extremely low, cutting down on the time necessary to fix any errors found. I have also left a month of time after finishing the project to focus on the dissertation paper, as well as give leeway in case I run into any unforeseen problems.
+
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
