@@ -1,0 +1,67 @@
+\contentsline {section}{\numberline {1}Introduction to Quantum Computing}{1}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}Brief History}{1}{subsection.1.1}% 
+\contentsline {subsection}{\numberline {1.2}QIO}{1}{subsection.1.2}% 
+\contentsline {subsection}{\numberline {1.3}The Qubit}{1}{subsection.1.3}% 
+\contentsline {subsection}{\numberline {1.4}The Bloch Sphere}{2}{subsection.1.4}% 
+\contentsline {subsection}{\numberline {1.5}Decoherence}{4}{subsection.1.5}% 
+\contentsline {subsection}{\numberline {1.6}Basic Operations}{4}{subsection.1.6}% 
+\contentsline {subsubsection}{\numberline {1.6.1}1-Qubit Gates}{4}{subsubsection.1.6.1}% 
+\contentsline {paragraph}{The Hadamard Gate}{4}{section*.4}% 
+\contentsline {paragraph}{The Pauli- Gates}{5}{section*.6}% 
+\contentsline {subsubsection}{\numberline {1.6.2}n-Qubit Gates}{6}{subsubsection.1.6.2}% 
+\contentsline {paragraph}{The SWAP Gate}{6}{section*.8}% 
+\contentsline {paragraph}{The Controlled-X Gate}{6}{section*.9}% 
+\contentsline {paragraph}{The Toffoli Gate}{6}{section*.10}% 
+\contentsline {paragraph}{The $C^n$-NOT Gate}{7}{section*.12}% 
+\contentsline {subsection}{\numberline {1.7}Entanglement}{8}{subsection.1.7}% 
+\contentsline {subsection}{\numberline {1.8}The Bell States}{8}{subsection.1.8}% 
+\contentsline {section}{\numberline {2}Motivations}{9}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Problems}{9}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}Simulators}{9}{subsection.2.2}% 
+\contentsline {section}{\numberline {3}Related Work}{9}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}IBM Q}{9}{subsection.3.1}% 
+\contentsline {subsubsection}{\numberline {3.1.1}Evaluation}{9}{subsubsection.3.1.1}% 
+\contentsline {subsubsection}{\numberline {3.1.2}Key Points}{10}{subsubsection.3.1.2}% 
+\contentsline {section}{\numberline {4}Project Description}{10}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Aim}{10}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Algorithms}{11}{subsection.4.2}% 
+\contentsline {subsubsection}{\numberline {4.2.1}Grover's algorithm}{11}{subsubsection.4.2.1}% 
+\contentsline {subsubsection}{\numberline {4.2.2}Shor's algorithm}{11}{subsubsection.4.2.2}% 
+\contentsline {section}{\numberline {5}The QIO Package}{12}{section.5}% 
+\contentsline {subsection}{\numberline {5.1}Underlying Structure}{12}{subsection.5.1}% 
+\contentsline {subsection}{\numberline {5.2}Updating QIO}{12}{subsection.5.2}% 
+\contentsline {subsubsection}{\numberline {5.2.1}Current Errors}{12}{subsubsection.5.2.1}% 
+\contentsline {subsubsection}{\numberline {5.2.2}New Errors}{14}{subsubsection.5.2.2}% 
+\contentsline {subsubsection}{\numberline {5.2.3}Testing}{14}{subsubsection.5.2.3}% 
+\contentsline {section}{\numberline {6}Algorithms}{15}{section.6}% 
+\contentsline {subsection}{\numberline {6.1}Grover's Algorithm}{15}{subsection.6.1}% 
+\contentsline {subsubsection}{\numberline {6.1.1}The Oracle}{15}{subsubsection.6.1.1}% 
+\contentsline {paragraph}{Implementation}{16}{section*.16}% 
+\contentsline {subsubsection}{\numberline {6.1.2}Diffusion}{17}{subsubsection.6.1.2}% 
+\contentsline {paragraph}{Implementation}{18}{section*.17}% 
+\contentsline {subsubsection}{\numberline {6.1.3}Application \& Measurement}{18}{subsubsection.6.1.3}% 
+\contentsline {paragraph}{Example}{19}{section*.19}% 
+\contentsline {paragraph}{Implementation}{19}{section*.22}% 
+\contentsline {paragraph}{Testing}{19}{section*.23}% 
+\contentsline {subsubsection}{\numberline {6.1.4}Expansion to multiple solutions}{19}{subsubsection.6.1.4}% 
+\contentsline {subsubsection}{\numberline {6.1.5}Implementing a Custom Oracle}{20}{subsubsection.6.1.5}% 
+\contentsline {subsubsection}{\numberline {6.1.6}Testing}{20}{subsubsection.6.1.6}% 
+\contentsline {subsubsection}{\numberline {6.1.7}An Improvement}{21}{subsubsection.6.1.7}% 
+\contentsline {subsubsection}{\numberline {6.1.8}Testing Solutions}{21}{subsubsection.6.1.8}% 
+\contentsline {paragraph}{Implementation}{22}{section*.29}% 
+\contentsline {subsubsection}{\numberline {6.1.9}Probability}{22}{subsubsection.6.1.9}% 
+\contentsline {subsection}{\numberline {6.2}Shor's Algorithm}{23}{subsection.6.2}% 
+\contentsline {subsubsection}{\numberline {6.2.1}Function Application}{24}{subsubsection.6.2.1}% 
+\contentsline {paragraph}{Calculating U\textsubscript {f}}{24}{section*.30}% 
+\contentsline {paragraph}{Applying U\textsubscript {f}}{24}{section*.31}% 
+\contentsline {subsubsection}{\numberline {6.2.2}The Quantum Fourier Transform}{25}{subsubsection.6.2.2}% 
+\contentsline {paragraph}{Implementation}{27}{section*.33}% 
+\contentsline {paragraph}{Finding the period}{27}{section*.35}% 
+\contentsline {paragraph}{Factorizing N}{28}{section*.36}% 
+\contentsline {subsubsection}{\numberline {6.2.3}An alternative}{28}{subsubsection.6.2.3}% 
+\contentsline {section}{\numberline {7}Quantum Circuit Builder}{29}{section.7}% 
+\contentsline {subsection}{\numberline {7.1}Design}{29}{subsection.7.1}% 
+\contentsline {subsection}{\numberline {7.2}Implementation}{29}{subsection.7.2}% 
+\contentsline {subsection}{\numberline {7.3}Testing}{29}{subsection.7.3}% 
+\contentsline {section}{\numberline {8}Reflections}{29}{section.8}% 
+\contentsline {section}{\numberline {9}References}{30}{section.9}% 

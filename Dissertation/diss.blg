@@ -1,0 +1,63 @@
+This is BibTeX, Version 0.99d (TeX Live 2018/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: diss.aux
+The style file: alpha.bst
+Database file #1: diss.bib
+I was expecting an "="---line 381 of file diss.bib
+ : 
+ : year="1926",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--to sort, need author or key in ibmqexperience
+Warning--to sort, need author or key in ibmqbeginner
+Warning--to sort, need author or key in ibmqfull
+Warning--to sort, need author or key in ibmqforum
+Warning--to sort, need author or key in ibmqiskit
+Warning--to sort, need author or key in base411
+Warning--empty journal in collision
+Warning--can't use both author and editor fields in qio
+Warning--empty year in born
+Warning--empty journal in ibmlaunch
+Warning--empty journal in decoherence2
+You've used 25 entries,
+            2543 wiz_defined-function locations,
+            695 strings with 8724 characters,
+and the built_in function-call counts, 7835 in all, are:
+= -- 786
+> -- 225
+< -- 17
++ -- 70
+- -- 64
+* -- 449
+:= -- 1174
+add.period$ -- 79
+call.type$ -- 25
+change.case$ -- 124
+chr.to.int$ -- 21
+cite$ -- 42
+duplicate$ -- 361
+empty$ -- 686
+format.name$ -- 97
+if$ -- 1676
+int.to.chr$ -- 5
+int.to.str$ -- 0
+missing$ -- 16
+newline$ -- 131
+num.names$ -- 57
+pop$ -- 202
+preamble$ -- 1
+purify$ -- 151
+quote$ -- 0
+skip$ -- 310
+stack$ -- 0
+substring$ -- 377
+swap$ -- 61
+text.length$ -- 17
+text.prefix$ -- 14
+top$ -- 0
+type$ -- 192
+warning$ -- 11
+while$ -- 56
+width$ -- 28
+write$ -- 310
+(There was 1 error message)

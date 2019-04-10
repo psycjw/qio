@@ -1,0 +1,153 @@
+\begin{thebibliography}{BCDP96}
+
+\bibitem[Aar05]{collision}
+Scott Aaronson.
+\newblock Limits on efficient computation in the physical world.
+\newblock 2005.
+\newblock https://arxiv.org/abs/quant-ph/0412143v2.
+
+\bibitem[AG09]{qio}
+Thorsten Altenkirch and Alexander~S. Green.
+\newblock {\em The Quantum IO Monad}, page 173–205.
+\newblock Cambridge University Press, 2009.
+
+\bibitem[Aug09]{timeit}
+Lennart Augustsson.
+\newblock {H}askell package timeit-1.0.0.0: {T}ime a computation, 2009.
+\newblock {L}ast accessed 4/2/2019.
+  http://hackage.haskell.org/package/timeit-1.0.0.0.
+
+\bibitem[bas]{base411}
+{C}hangelog for base-4.11.0.0 | {H}ackage.
+\newblock http://hackage.haskell.org/package/base-4.11.0.0/changelog.
+
+\bibitem[BCDP96]{shorcomplexity}
+David Beckman, Amalavoyal~N. Chari, Srikrishna Devabhaktuni, and John Preskill.
+\newblock Efficient networks for quantum factoring.
+\newblock {\em Phys. Rev. A}, 54:1034--1063, Aug 1996.
+\newblock https://link.aps.org/doi/10.1103/PhysRevA.54.1034.
+
+\bibitem[Ben82]{benioff}
+Paul Benioff.
+\newblock Quantum mechanical models of turing machines that dissipate no
+  energy.
+\newblock {\em Phys. Rev. Lett.}, 48:1581--1585, Jun 1982.
+\newblock https://link.aps.org/doi/10.1103/PhysRevLett.48.1581.
+
+\bibitem[Bor]{born}
+Max Born.
+\newblock Zur quantenmechanik der sto{\ss}vorg{\"a}nge [on the quantum
+  mechanics of collisions].
+\newblock {\em Zeitschrift f{\"u}r Physik}.
+
+\bibitem[DJ92]{deutsch-jozsa}
+David Deutsch and Richard Jozsa.
+\newblock Rapid solution of problems by quantum computation.
+\newblock {\em Proceedings of the Royal Society of London. Series A:
+  Mathematical and Physical Sciences}, 439(1907):553--558, 1992.
+\newblock https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1992.0167.
+
+\bibitem[DP85]{deutsch}
+David Deutsch and Roger Penrose.
+\newblock Quantum theory, the church-turing principle and the universal quantum
+  computer.
+\newblock {\em Proceedings of the Royal Society of London. A. Mathematical and
+  Physical Sciences}, 400(1818):97--117, 1985.
+\newblock https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1985.0070.
+
+\bibitem[Fey82]{feynman}
+Richard~P. Feynman.
+\newblock Simulating physics with computers.
+\newblock {\em Internation Journal of Theoretical Physics}, 21(6/7), 1982.
+\newblock https://people.eecs.berkeley.edu/christos/classics/Feynman.pdf.
+
+\bibitem[Gid13]{groverblog}
+Craig Gidney.
+\newblock {G}rover's {Q}uantum {S}earch {A}lgorithm, 2013.
+\newblock {L}ast accessed 16/1/2019.
+  http://twistedoakstudios.com/blog/Post2644\_grovers-quantum-search-algorithm.
+
+\bibitem[Gre09]{nsc}
+Alexander~S. Green.
+\newblock {G53/G54 NSC} {L}ectures given by {A}lexander {S}. {G}reen over the
+  academic years 2009/2010., 2009.
+\newblock http://www.drinkupthyzider.co.uk/asg/NSC/.
+
+\bibitem[Gro96]{grover}
+Lov~K. Grover.
+\newblock A fast quantum mechanical algorithm for database search.
+\newblock In {\em Proceedings of the Twenty-eighth Annual ACM Symposium on
+  Theory of Computing}, STOC '96, pages 212--219, New York, NY, USA, 1996. ACM.
+\newblock http://doi.acm.org/10.1145/237814.237866.
+
+\bibitem[ibma]{ibmqforum}
+{IBM Q Experience Community}.
+\newblock {L}ast accessed 06/12/2018.
+  https://quantumexperience.ng.bluemix.net/qx/community.
+
+\bibitem[ibmb]{ibmqbeginner}
+{IBM Q E}xperience {D}ocumentation {B}eginners {G}uide.
+\newblock {L}ast accessed 06/12/2018.
+  https://quantumexperience.ng.bluemix.net/qx/tutorial?sectionId=beginners-guide\&page=introduction.
+
+\bibitem[ibmc]{ibmqfull}
+{IBM Q E}xperience {D}ocumentation {F}ull {G}uide.
+\newblock {L}ast accessed 06/12/2018.
+  https://quantumexperience.ng.bluemix.net/qx/tutorial?sectionId=full-user-guide\&page=introduction.
+
+\bibitem[ibmd]{ibmqexperience}
+{IBM Q E}xperience, the online platform created by {IBM} allowing users access
+  to {Q}uantum {C}omputers.
+\newblock {L}ast accessed 06/12/2018.
+  https://quantumexperience.ng.bluemix.net/qx/experience.
+
+\bibitem[ibme]{ibmqiskit}
+{Jupyter Notebook Viewer - Qiskit Tutorials}.
+\newblock {L}ast accessed 06/12/2018.
+  https://nbviewer.jupyter.org/github/Qiskit/qiskit-tutorial/blob/master/index.ipynb.
+
+\bibitem[Lub17]{qiskit}
+David Lubensky.
+\newblock {Q}uantum {C}omputing gets an {API} and {SDK}, March 2017.
+\newblock
+  https://developer.ibm.com/dwblog/2017/quantum-computing-api-sdk-david-lubensky/.
+
+\bibitem[Mer07]{qscbook}
+N.~David Mermin.
+\newblock {\em Quantum Computer Science: An Introduction}.
+\newblock Cambridge University Press, 2007.
+
+\bibitem[New16]{ibmlaunch}
+IBM Newsroom.
+\newblock Ibm makes quantum computing available on ibm cloud to accelerate
+  innovation.
+\newblock May 2016.
+\newblock https://www-03.ibm.com/press/us/en/pressrelease/49661.wss.
+
+\bibitem[Sho94]{shor}
+P.~W. Shor.
+\newblock Algorithms for quantum computation: discrete logarithms and
+  factoring.
+\newblock In {\em Proceedings 35th Annual Symposium on Foundations of Computer
+  Science}, pages 124--134, Nov 1994.
+
+\bibitem[SP05]{decoherence2}
+D.~Solenov and V.~Privman.
+\newblock Evaluation of decoherence for quantum computing architectures: Qubit
+  system subject to time-dependent control.
+\newblock 2005.
+\newblock https://arxiv.org/abs/cond-mat/0506286.
+
+\bibitem[Woo17]{qships}
+Dr.~James Wootton.
+\newblock {Q}uantum {B}attleships: The first multiplayer game for a quantum
+  computer, 2017.
+\newblock {L}ast accessed 14/12/2018.
+  https://medium.com/@decodoku/quantum-battleships-the-first-multiplayer-game-for-a-quantum-computer-e4d600ccb3f3.
+
+\bibitem[Zur91]{decoherence}
+W.H. Zurek.
+\newblock Decoherence and the transition from quantum to classical - revisited.
+\newblock {\em Physics Today}, 44:36--44, 10 1991.
+
+\end{thebibliography}
