@@ -106,6 +106,13 @@ Lov~K. Grover.
 \newblock {L}ast accessed 06/12/2018.
   https://nbviewer.jupyter.org/github/Qiskit/qiskit-tutorial/blob/master/index.ipynb.
 
+\bibitem[Lip18]{gloss}
+Ben Lippmeier.
+\newblock {gloss: Painless 2D vector graphics, animations and simulations.},
+  2018.
+\newblock Hackage: http://hackage.haskell.org/package/gloss Main page:
+  http://gloss.ouroborus.net.
+
 \bibitem[Lub17]{qiskit}
 David Lubensky.
 \newblock {Q}uantum {C}omputing gets an {API} and {SDK}, March 2017.
@@ -144,6 +151,13 @@ Dr.~James Wootton.
   computer, 2017.
 \newblock {L}ast accessed 14/12/2018.
   https://medium.com/@decodoku/quantum-battleships-the-first-multiplayer-game-for-a-quantum-computer-e4d600ccb3f3.
+
+\bibitem[Yor16]{diagrams}
+Brent Yorgey.
+\newblock {diagrams: Embedded domain-specific language for declarative vector
+  graphics}, 2016.
+\newblock Hackage: http://hackage.haskell.org/package/diagrams Main page:
+  https://diagrams.github.io.
 
 \bibitem[Zur91]{decoherence}
 W.H. Zurek.

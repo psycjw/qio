@@ -56,12 +56,27 @@
 \contentsline {paragraph}{Applying U\textsubscript {f}}{24}{section*.31}% 
 \contentsline {subsubsection}{\numberline {6.2.2}The Quantum Fourier Transform}{25}{subsubsection.6.2.2}% 
 \contentsline {paragraph}{Implementation}{27}{section*.33}% 
-\contentsline {paragraph}{Finding the period}{27}{section*.35}% 
-\contentsline {paragraph}{Factorizing N}{28}{section*.36}% 
-\contentsline {subsubsection}{\numberline {6.2.3}An alternative}{28}{subsubsection.6.2.3}% 
+\contentsline {subsubsection}{\numberline {6.2.3}Finding the period}{28}{subsubsection.6.2.3}% 
+\contentsline {subsubsection}{\numberline {6.2.4}The Implementation - an Alternative}{29}{subsubsection.6.2.4}% 
 \contentsline {section}{\numberline {7}Quantum Circuit Builder}{29}{section.7}% 
-\contentsline {subsection}{\numberline {7.1}Design}{29}{subsection.7.1}% 
-\contentsline {subsection}{\numberline {7.2}Implementation}{29}{subsection.7.2}% 
-\contentsline {subsection}{\numberline {7.3}Testing}{29}{subsection.7.3}% 
-\contentsline {section}{\numberline {8}Reflections}{29}{section.8}% 
-\contentsline {section}{\numberline {9}References}{30}{section.9}% 
+\contentsline {subsection}{\numberline {7.1}Analysis}{29}{subsection.7.1}% 
+\contentsline {subsubsection}{\numberline {7.1.1}Specification}{30}{subsubsection.7.1.1}% 
+\contentsline {paragraph}{Functional}{30}{section*.36}% 
+\contentsline {paragraph}{Non-functional}{30}{section*.37}% 
+\contentsline {subsection}{\numberline {7.2}Graphics in Haskell}{31}{subsection.7.2}% 
+\contentsline {subsubsection}{\numberline {7.2.1}Diagrams}{31}{subsubsection.7.2.1}% 
+\contentsline {subsubsection}{\numberline {7.2.2}Gloss}{31}{subsubsection.7.2.2}% 
+\contentsline {subsubsection}{\numberline {7.2.3}The Package of Choice}{32}{subsubsection.7.2.3}% 
+\contentsline {subsection}{\numberline {7.3}Implementation}{32}{subsection.7.3}% 
+\contentsline {subsubsection}{\numberline {7.3.1}The Window}{32}{subsubsection.7.3.1}% 
+\contentsline {subsubsection}{\numberline {7.3.2}The Circuit}{33}{subsubsection.7.3.2}% 
+\contentsline {subsubsection}{\numberline {7.3.3}Rendering}{33}{subsubsection.7.3.3}% 
+\contentsline {subsubsection}{\numberline {7.3.4}User Interaction}{35}{subsubsection.7.3.4}% 
+\contentsline {paragraph}{Button Press}{36}{section*.42}% 
+\contentsline {paragraph}{Placing a Gate}{36}{section*.44}% 
+\contentsline {paragraph}{Picking up a Gate}{37}{section*.45}% 
+\contentsline {paragraph}{Key Press}{37}{section*.46}% 
+\contentsline {subsubsection}{\numberline {7.3.5}Executing the Circuit}{38}{subsubsection.7.3.5}% 
+\contentsline {subsection}{\numberline {7.4}Testing}{39}{subsection.7.4}% 
+\contentsline {section}{\numberline {8}Reflections}{39}{section.8}% 
+\contentsline {section}{\numberline {9}References}{40}{section.9}% 

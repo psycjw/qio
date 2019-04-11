@@ -19,45 +19,45 @@ Warning--can't use both author and editor fields in qio
 Warning--empty year in born
 Warning--empty journal in ibmlaunch
 Warning--empty journal in decoherence2
-You've used 25 entries,
+You've used 27 entries,
             2543 wiz_defined-function locations,
-            695 strings with 8724 characters,
-and the built_in function-call counts, 7835 in all, are:
-= -- 786
-> -- 225
-< -- 17
-+ -- 70
-- -- 64
-* -- 449
-:= -- 1174
-add.period$ -- 79
-call.type$ -- 25
-change.case$ -- 124
-chr.to.int$ -- 21
-cite$ -- 42
-duplicate$ -- 361
-empty$ -- 686
-format.name$ -- 97
-if$ -- 1676
+            704 strings with 9085 characters,
+and the built_in function-call counts, 8367 in all, are:
+= -- 836
+> -- 241
+< -- 19
++ -- 74
+- -- 68
+* -- 471
+:= -- 1258
+add.period$ -- 85
+call.type$ -- 27
+change.case$ -- 134
+chr.to.int$ -- 23
+cite$ -- 44
+duplicate$ -- 383
+empty$ -- 736
+format.name$ -- 105
+if$ -- 1788
 int.to.chr$ -- 5
 int.to.str$ -- 0
 missing$ -- 16
-newline$ -- 131
-num.names$ -- 57
-pop$ -- 202
+newline$ -- 141
+num.names$ -- 63
+pop$ -- 222
 preamble$ -- 1
-purify$ -- 151
+purify$ -- 163
 quote$ -- 0
-skip$ -- 310
+skip$ -- 331
 stack$ -- 0
-substring$ -- 377
-swap$ -- 61
-text.length$ -- 17
-text.prefix$ -- 14
+substring$ -- 391
+swap$ -- 63
+text.length$ -- 19
+text.prefix$ -- 16
 top$ -- 0
-type$ -- 192
+type$ -- 208
 warning$ -- 11
-while$ -- 56
-width$ -- 28
-write$ -- 310
+while$ -- 60
+width$ -- 31
+write$ -- 334
 (There was 1 error message)

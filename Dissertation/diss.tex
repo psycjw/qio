@@ -68,8 +68,8 @@
 \section*{Abstract}
 Quantum computing is growing daily as new quantum computers are created, and new research is done. There are already many desirable uses of quantum computing, such as factoring integers in $O(log N)$ \cite{shor} and searching unsorted databases in $O(\sqrt{N})$ \cite{grover}. There are even quantum games being created, such as Quantum Battleships \cite{qships}. \par
 As the field expands, more people will find interest in the field and attempt to learn and pursue a career concerning quantum computers, and so suitable learning and experimental platforms need to be present to help this happen. This is the main inspiration for this project; create a stable up-to-date platform for users to run quantum computations on a classical computer via quantum simulation, while also improving my own understanding and experience of the subject for the future.\par
-This dissertation explains the basics of quantum computing, and provides possible methods for the implementation of certain quantum algorithms on a classical computer using Haskell, with a quantum-computation simulating package called QIO \cite{qio}. This package already includes structures necessary for quantum computations, such as the qubit and unitary functions, however does not work on the latest Haskell update (v8.4.3) and lacks complex quantum algorithms. Therefore, the package is first updated, and then 2 quantum algorithms are implemented. Following this, a quantum circuit builder is designed and implemented in the package, allowing users to create and test quantum circuits using a intuitive GUI.\par
-Each part of the project, namely the two algorithms implemented and the circuit builder, is completely separate and functions independantly, and so I split the project up into 3 parts. Each part is designed, implemented, tested and evaluated before moving to the next part - avoiding confusion between parts and ensuring one part is complete before attempting the next.
+This dissertation explains the basics of quantum computing, and provides possible methods for the implementation of certain quantum algorithms on a classical computer using Haskell, with a quantum-computation simulating package called QIO \cite{qio}. This package already includes structures necessary for quantum computations, such as the qubit and unitary functions, however does not work on the latest Haskell update (v8.4.3) and lacks complex quantum algorithms. Therefore, the package is first updated, and then two quantum algorithms are implemented. Following this, a quantum circuit builder is designed and implemented in the package, allowing users to create and test quantum circuits using a intuitive GUI.\par
+Each part of the project, namely the implementation of two algorithms, Grover's algorithm and Shor's algorithm, and the quantum circuit builder, is completely separate and functions independantly. Due to this, I split the project up into three parts. Each part is designed, implemented, tested and evaluated before moving to the next part - avoiding confusion between parts and ensuring one part is complete before attempting the next.
 \newpage
 
 \fancyhead[RE, LO]{\leftmark}
@@ -87,7 +87,7 @@ Over time, quantum algorithms have been developed which solve problems faster an
 \subsection{QIO}
 QIO is a Haskell package built by Alexander S. Green and Prof. Thorsten Altenkirch \cite{qio}, which allows users to simulate a quantum computer on their own classical computer. Typical quantum operations are built up of unitary (reversible) functions under a monoid \texttt{U}, and can then be run using a monad \texttt{QIO} and the function \texttt{applyU}. This \texttt{QIO} monad also has functions \texttt{mkQbit} and \texttt{measQbit}, which can be used to create a new qubit and measure an existing qubit respectively.\par
 This leads to an intuitive platform which can be used to create quantum computations, and then run/simulate them with 2 very simple functions \texttt{run :: QIO a -> IO a}  and \texttt{sim :: QIO a -> Prob a}, where \texttt{run} is used to execute a quantum computation and return the value of qubits measured based on their probabilities and a pseudorandom number generator. The \texttt{sim} function is similar, however after executing a quantum computation, it returns the probability distribution for the qubits measured, showing the possible states and their probabilities when measured.\par
-I will use this package to help introduce and teach quantum computing, providing relevent code segments to improve clarity, and create programs to highlight certain features of quantum computations.
+Throughout this dissertation, this package is frequently used to help introduce and teach quantum computing, providing relevent code segments to improve clarity, and create programs which highlight certain features of quantum computations.
 
 \subsection{The Qubit}
 A classical computer uses a bit to store data. This bit can only be in one of two states, 0 or 1. Strings of bits are then used to represent data and instructions, forming the basis of classical computation.\par
@@ -537,7 +537,7 @@ instance Monoid Unitary where
 After updating QioClass.hs and Qio.hs, the package builds and installs successfully onto Haskell v8.4.3. \textit{Note: The package still installs and runs correctly on the newest version of Haskell, namely v8.6.3.} Running various quantum programs using the updated package gives correct results, and so the package still works as intended after being updated, and so all that is left to do is change the base dependancy of the package to $\geq 4.11$.
 
 \section{Algorithms}
-During the following two sections, namely those relating to Grover's algorithm and Shor's algorithm, I will attempt to fully describe how the algorithms work while simultaneously implementing them in Haskell using the QIO package, in order to improve understanding and readability.
+During the following two sections, the algorithms mentioned earlier will be explained in more detail, along with explanations of their implementations in Haskell using the QIO package. The algorithms are each broken down into parts, and each respective part of the implementation is described simultaneously in an effort to maximise understanding.
 
 \subsection{Grover's Algorithm}
 As stated earlier in section 4.2.1, Grover's algorithm can be used to search a quantum database in $O(\sqrt n)$, and can be extended to solve any blackbox boolean function. This extension reveals the numerous uses Grover's algorithm has, and so will be the main focus for implementation. Allowing the user to input a custom function will abstract them away from the algorithm's complexity, enabling simple testing over multiple use cases - hopefully improving understanding.\par
@@ -956,12 +956,54 @@ cond x2 (\x -> if x then R 1 x3) <> cond x1 (\x -> if x then R 2 x3) <>
 cond x0 (\x -> if x then R 3 x3) <> uhad x3
 \end{verbatim}
 
-In order to create such a unitary operation, the implementation uses a recursive function which takes in 
+In order to create such a unitary operation, the implementation uses two recursive functions, \texttt{qftAcu} and \texttt{qftBase}. An entry function \texttt{qft} is then used to apply \texttt{qftAcu} over a list of \texttt{Qbit}s, using a new type class \texttt{Qdata a qa | a -> qa, qa -> a}.\par
+This class defines what operations a quantum datatype must implement, and so relates heavily to the main structure of the \texttt{QIO} monad. \par
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.54\textwidth}
+        \begin{verbbox}
+class Qdata a qa | a -> qa, qa -> a where
+  mkQ :: a -> QIO qa
+  measQ :: qa -> QIO a
+  letU :: a -> (qa -> U) -> U
+  condQ :: qa -> (a -> U) -> U
+        \end{verbbox}
+        \theverbbox
+    \end{minipage}
+     \begin{minipage}[b]{0.45\textwidth}
+        \begin{verbbox}
+instance Qdata Bool Qbit where
+    mkQ = mkQbit
+    measQ = measQbit
+    letU b xu = ulet b xu
+    condQ q br = cond q br
+        \end{verbbox}
+        \theverbbox
+    \end{minipage}
+\end{figure}
 
-\paragraph{Finding the period}
-So, after applying the unitary $U_f$ to the state $\ket \phi _n \otimes \ket 0 _{n_0}$ we are left with the state
-$$\frac{1}{2^{n/2}} \sum_{x=0}^{2^n -1} \ket x _n \ket{f(x)}_{n_0}$$
-After measuring the output register, the input register collapses to the state
+As you can see, we have already defined the operations for the relation between \texttt{Bool}s and \texttt{Qbit}s. The class is then used to define other quantum datatypes; pairs of datatypes, lists of datatypes, and most notably, a datatype relating \texttt{Int}s to quantum integers, \texttt{QInt}s.\par
+Using two functions - one which creates a list of \texttt{Bool} values representing its \texttt{Int} argument, and the other which converts a list of \texttt{Bool} values to an integer - the datatype effectively works as an abstraction over a list of \texttt{Qbits} qs, stored as \texttt{QInt qs}.\par
+The main operation used for the quantum Fourier transform is \texttt{condQ}. It  is used to perform conditional operations, such as the rotations described above, and enables the function \texttt{qft} to send its \texttt{[Qbit]} argument to \texttt{qftAcu} with the measured values of the qubits.\par
+\begin{verbatim}
+qft :: [Qbit] -> U
+qft qs = condQ qs (\bs -> qftAcu qs bs [])
+\end{verbatim}
+From there, \texttt{qftAcu} deals with all the operations on a qubit, recursively moving from $x_0$ to $x_{n-1}$, while \texttt{qftBase} deals with each individual operation, i.e. the Hadamards and conditional Rotation gates.
+\begin{verbatim}
+qftAcu :: [Qbit] -> [Bool] -> [Bool] -> U
+qftAcu [] [] _ = mempty
+qftAcu (q:qs) (b:bs) cs = qftBase cs q `mappend` qftAcu qs bs (b:cs)
+
+qftBase :: [Bool] -> Qbit -> U
+qftBase bs q =  f' bs q 2
+    where f' [] q _ = uhad q
+          f' (b:bs) q x = if b then (rotK x q) `mappend` f' bs q (x+1)
+                  else f' bs q (x+1)
+\end{verbatim}
+
+\subsubsection{Finding the period}
+So, after applying the unitary $U_f$ to the state $\ket \phi _n \otimes \ket 0 _{n_0}$, and measuring the output register, the input register collapses to the state
 $$\ket \Psi _n = \frac{1}{\sqrt m} \sum _{k=0}^{m-1} \ket{x_0 + kr}_n, \qquad  0 \leq x_0 < r, \qquad f(x_0) = f_0 $$
 To extract the period $r$, we can apply the quantum Fourier transformation as shown below.
 \begin{align*}
@@ -970,50 +1012,264 @@ To extract the period $r$, we can apply the quantum Fourier transformation as sh
 \end{align*}
 The probability of getting the result $y$ is therefore given by
 $$\frac{1}{2^nm}\left| \sum_{k=0}^{m-1}e^{2\pi i kry/2^n}\right|^2$$
-which is highest when $y$ is close to integral multiples of $2^n/r$. So, the period is given by the equation $r = 2^n / y$.
+which is highest when $y$ is close to integral multiples of $2^n/r$, giving the period as $r = 2^n / y$.
 
-\paragraph{Factorizing N}
-Now that we have a value for $r$, we need to check that it is even, and then calculate $x = b^{r/2} \Mod N$. After this, we need to check that $(x-1)$ is not divisible by $N$. If both these cases are true, we can factorize $N$, and if not we must find a new value for $r$ using a different value for $b$ for the application of $U_f$. \par
-All that is left to do is find the greatest common divisor of $N$ and $x-1$, and $N$ and $x+1$, which will be the values of $p$ and $q$ in the equation $N = pq$.
+\subsubsection{The Implementation - an Alternative}
+The quantum Fourier transformation has another use here; it's inverse can be used in a procedure known as phase estimation:
 
-\subsubsection{An alternative}
-The quantum Fourier transformation has another use; it's inverse can be used in a procedure known as phase estimation. If we have a superposition of states
+If we have a superposition of states
 $$\frac{1}{2^{t/2}}\sum_{j=0}^{2^t-1}e^{2\pi i \varphi j} \ket j _n \ket u _m$$
-we can apply the inverse quantum Fourier transform to get the state
-$$\ket {\hat{\varphi}}_n \ket u _m \text{ where  $\hat{\varphi}$ is an approximation of $ \varphi $ up to $n$ bits.}$$\par
-We can use phase estimation to execute Shor's algorithm with a higher accuracy. So, to recap, after applying $U_f$, we are left with the state
+we can apply the inverse quantum Fourier transform to get the state $\ket {\hat{\varphi}}_n \ket u _m$ where  $\hat{\varphi}$ is an approximation of $ \varphi $ up to $n$ bits. We can use this phase estimation procedure to execute Shor's algorithm.\par
+To recap, after applying $U_f$, we are left with the state
 $$\frac{1}{2^{n/2}} \sum_{x=0}^{2^n -1} \ket x \ket{b^x \Mod N}$$
-This state is approximately equal to 
-$$\frac{1}{\sqrt{r2^n}}\sum_{s=0}^{r-1} \sum_{x=0}^{2^n-1} e^{2\pi i x \frac{s}{r}} \ket x \ket{u_s} \text{ where } \ket{u_s} = \frac{1}{\sqrt r} \sum_{k=0}^{r-1} e^{\frac{-2\pi isk}{r}} \ket{b^k \Mod N}$$
+Now, this state is approximately equal to 
+$$\frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}\left(\frac{1}{2^{n/2}} \sum_{x=0}^{2^n-1} e^{2\pi i x \frac{s}{r}} \ket x \ket{u_s}\right) \text{ where } \ket{u_s} = \frac{1}{\sqrt r} \sum_{k=0}^{r-1} e^{\frac{-2\pi isk}{r}} \ket{b^k \Mod N}$$
 Applying the inverse quantum Fourier transform to this state gives
 $$\frac{1}{\sqrt r}\sum_{s=0}^{r-1} \ket{( \frac{\hat s}{r} )} \ket{u_s}$$
-and so measuring the first register will give us an integer result for $\varphi = \left( \frac{\hat s}{r} \right) $ up to $n$ bits. We can then use the continued fractions algorithm for $\frac{\varphi}{2^n}$ to calculate $r$.
+and so measuring the first register will give us an integer result $\hat{\varphi} = \frac{\hat s}{r} \approx \frac{s}{r}$ up to $n$ bits. We can then use the continued fractions algorithm for $\frac{\varphi}{2^n}$ to calculate $r$.\par
+On to the implementation. After getting a random integer coprime to $N$ - using a quantum random number generator defined in \texttt{QIORandom.hs} - the implementation applies Shor's algorithm with the function \texttt{shor :: Int -> Int -> QIO Int}, which initializes the qubits, applies hadamard gates to the first register, applies the function $b^x \Mod N$ and then applies the inverse of the quantum Fourier transformation. This is done efficiently using the already-defined quantum Fourier transformation, \texttt{qft}, and the function which reverses its unitary argument, \texttt{urev}. Finally, the first register is measured and its value returned as an \texttt{Int}. Due to the approximation and the small amount of qubits, this integer returned is approximately the period $r$.\par
+All that is left is to check if $r$ is even and not equal to $0$, and that $x-1 \neq 0 \Mod N$. If all these are true, $N$ is factorized using \texttt{gcd (x-1) n} and \texttt{gcd (x+1) n}.
 
-
-
-
-Say we have a periodic function of $x$ with period $r$, where $N$ is the product of 2 primes, $p$ and $q$.
-$$b^r = 1 \Mod N, \qquad r \in \mathbb{Z}, \qquad N = pq$$
-$$\therefore f(x) = b^x \Mod N \implies f(x+s) = f(x) \Leftrightarrow s = cr, \qquad c \in \mathbb{Z} $$
-In order to find a value for $b$, we all the numbers coprime with $N$, done simply using Euclid's algorithm. Next, we pick a random value for $b$ from the numbers found, and check which gives the required properties for the period $r$, with a probability of $>50\%$\cite{nsc}\textsuperscript{Shor's algorithm continued, page 27}. The necessary properties are:\par
-\begin{enumerate}
-    \item $r$ needs to be even\par
-    If $r$ is even, then we can calculate
-    $$x = b^{\frac{r}{2}}\Mod N$$
-    \item $x-1 \neq 0 \Mod N$ as $r$ must be the smallest integer for which $b^r = 1 \Mod N$
-\end{enumerate}
-From this,
-$$ x^2 = (b^{\frac{r}{2}})^2 \Mod N = b^r \Mod N = 1 \Mod N$$
-$$\therefore (x-1)(x+1) = x^2 - 1 = 0 \Mod N$$
-So now, $x-1$ and $x+1$ aren't divisible by $N$, but $(x-1)(x+1)$ is, and as $N$ is the product of 2 primes, $p$ and $q$, it follows that $x-1$ is divisble by $p$, and $x+1$ is divisble by $q$.\par
-Therefore, $p = gcd(x-1, N)$ and $q = gcd(x+1, N)$, and $N$ has been factorised.
 
 \section{Quantum Circuit Builder}
-The 
+\subsection{Analysis}
+As mentioned earlier, the quantum circuit builder will be similar to the IBM Q Composer \cite{ibmqexperience}. Emphasis needs to be placed on usability, giving users a stable, reliable and most notably, easy to use graphical platform they can use to create and simulate quantum computations on a classical computer using Haskell and the QIO package.\par
+Therefore, the user should be presented with a readable and intuitive circuit diagram; minimal in design to avoid confusion while also being large enough to convey the details of the circuit. The user needs to be able to alter the amount of qubits on the circuit. Quantum gates will be able to be moved on/off the circuit, enabling easy creation of a new quantum circuit without confusion. Buttons need to be available to run or simulate the created circuit, presenting the results of either to the user in a clear manner. The circuit needs to be able to be edited, allowing the moving of gates off the circuit, and changing the order in which they appear. Gates also need to be able to be made conditional to other specified qubits so that more complex quantum circuits can be built.
 
-\subsection{Design}
+\subsubsection{Specification}
+\paragraph{Functional}
+\begin{enumerate}
+        \item A graphical interface will be presented to the user in its own window upon running the program. Closing this window will end the program entirely.
+        \item An initial circuit will be shown containing three qubits, initially in the state $\ket 0$.
+        \item Buttons will be available to add or remove qubits from the circuit, and all qubits will initially be in the state $\ket 0$.
+        \item Quantum gates will be able to be moved on and off the circuit using a mouse.
+        \item While picked up, gates must be able to be removed, allowing the user to cancel their original intention.
+        \item Gates will be able to be made conditional on other qubits, which also need to be specified before placement.
+        \item Gates must be able to be moved around the circuit, while maintaining the layout of the other gates on the circuit.
+        \item Buttons can be used to run or simulate the circuit, using the appropriate \texttt{run} and \texttt{sim} functions. The results of these functions then need to be presented to the user clearly.
+\end{enumerate}
+
+\paragraph{Non-functional}
+\begin{enumerate}
+    \item \textbf{Usability} Emphasis must be placed on usability. All aspects of the graphical interface must be large enough to read and interact with, while also being clear on their intended use. A user guide will need to be created, explaining in appropriate detail each part of the program, and explain appropriate use cases.
+    \item \textbf{Reliability} The program must be able to be run at any time on any appropriate computer with a Haskell compiler installed. It must not crash at any point, and so should only execute simple functions to present and allow interaction with the interface. However, the running and simulating of circuits will rely on QIO's functions, which are already relatively reliable.
+    \item \textbf{Performance} Due to its graphical nature, the interface needs to be efficient in its rendering and interaction functions in order to minimise user frustration and confusion.
+    \item \textbf{Quality} The functional and non-functional specifications here needs to be met as best as possible to maximise the program's quality. It must be thoroughly tested with both simple and complex quantum circuits to ensure it is robust and can handle the user's needs.
+    \item \textbf{Documentation} As mentioned above, a user guide will need to be created to provide instruction to the user on how to interact with the program. Simple explanation needs to be provided on what each aspect of the interface does, alongside the detailing of common use cases of the program.
+\end{enumerate}
+
+\subsection{Graphics in Haskell}
+As the circuit builder will be created in Haskell, a suitable graphics package must be used to deal with rendering as well as user interaction. Therefore, research is first done to find the most appropriate package to ensure program quality alongside an understandable implementation.
+
+\subsubsection{Diagrams}
+Diagrams \cite{diagrams} is ``a powerful, flexible, declarative domain-specific language for creating vector graphics, using the Haskell programming language.'' It's core library aims to be as simple and flexible as possible, built using a small set of primitive types and operations. The main page of the package \cite{diagrams} provides access to a quick start tutorial, giving basic instruction on installation and simple use, along with a full user manual explaining each aspect of the package, and how to create complex images. \par
+Drawing both simple and complicated images is very easy with this library. For example, to draw a circle of radius 1 is done quickly by executing \texttt{circle 1}. Shapes can be combined using functions such as \texttt{atop}, or placed side-by-side with the operators \texttt{|||} and \texttt{===} for horizontal and vertical placement respectively. Diagram attributes, such as line width and fill colour, are defined using simple functions taking in the value to set the attribute to, such as \texttt{lw veryThick} and \texttt{fc red}. Diagrams can also be transformed using \texttt{scale}, \texttt{rotate} and \texttt{reflect} functions. The diagrams form a monoid under \texttt{atop} as well, and so two diagrams can be superimposed using the mappend operator \texttt{<>} instead of \texttt{atop}. Other things, such as transformations and paths, also form monoids allowing easy construction of complex images.\par
+While this package does seem promising, it is not suitable for creating a quantum circuit builder. The simple and effective commands would be extremely useful for rendering purposes, however the program does not need complex shapes to be drawn. The diagrams package also draws to files, such as .svg files using its SVG backend, which is the opposite of what is required by the circuit builder. User interaction is also not supported, reinforcing the idea that this package is not suitable for use in this case. 
+
+\subsubsection{Gloss}
+Gloss \cite{gloss} ``hides the pain of drawing simple vector graphics behind a nice data type and a few display functions''. The package abstracts the use of OpenGL and GLUT, promising that you can ``get something cool on the screen in under 10 minutes.'' Much like diagrams, it aims to be as simple as possible while also being flexible, allowing simple and complex images to be drawn effectively. Learning the package is not quite as easy to do as with diagrams, as there is no quick start tutorial or user guide. Instruction is instead given using straightforward examples, ranging from drawing simple text on the screen to animating the movement of complex images over a background. Luckily, the package is intuitively designed, and so being able to create images, interact with the user and draw animations, can be learnt with the use of these examples and reading through some of the code.\par
+Much like with the diagrams package, shapes can be drawn extremely easily using functions like \texttt{rectangleSolid} and \texttt{thickCircle}. Text can also be drawn using a simple function \texttt{text} which takes in the \texttt{String} to draw. Everything that can be drawn is defined under a \texttt{Picture} data type, and attributes of shapes can be changed by functions of the type \texttt{Picture -> Picture}. This means such functions can be combined with the \$ character. For example, creating a solid red circle with radius 5 at coordinates (100,100) is done with the line \texttt{translate 100 100 \$ color red \$ circle 5}. Pictures can be combined and altered as one using the \texttt{pictures :: [Picture] -> Picture} function.\par
+The \texttt{main :: IO ()} function is used as the entry point to programs using gloss, which provides multiple functions for different use cases. For example, the \texttt{display :: Display -> Color -> Picture -> IO ()} function draws the \texttt{Picture} on a display specified by the \texttt{Display} type with a background colour specified by the \texttt{Color} type. The main function here though is the function \texttt{play}.
+\begin{verbatim}
+ play :: Display -> Color -> Int 
+         -> world -> (world -> Picture) -> (Event -> world -> world) 
+         -> (Float -> world -> world) -> IO ()
+\end{verbatim}
+This function presents a display specified with a given background colour and a framerate. It then uses a function of type \texttt{(world -> Picture)} to render a world, starting with the intial world specified, and allows user interaction with a function of type \texttt{(Event -> world -> world)}. The final argument is then used to step the world by one frame, allowing animations to be created.\par
+This package is a great fit for use in creating a graphical quantum circuit builder. The simple functions provided to draw basic shapes, which can be extended to draw more complex objects, work perfectly, and the availability of a function to draw text given a string would come in handy. The abstraction of user interaction with an \texttt{Event} type is great to create simple yet effective functions which handle all necessary types of user interaction. However, the lack of even a small quick start guide means the, albeit basic, knowledge required to use the package has to be learnt through limited examples, code reading and trial and error.
+
+\subsubsection{The Package of Choice}
+The most appropriate package for use in creating the quantum circuit builder is gloss. The simple abstraction to OpenGL and GLUT means drawing shapes is easily done, effective and efficient. The \texttt{play} function means handling of user interaction can be done with one simple function, and is made to be used with one world type in mind. This would enable the implementation to be built around a circuit record, storing the amount of qubits on the circuit, the gates on the circuit etc.\par
+The \texttt{pictures} function will allow transformations to be performed on groups of images, such as all the buttons or the rows of qubits, making the implementation simple and easy to understand for others. Rendering of text will be used frequently to intuitively describe buttons and present results of computation to the user. 
 
 \subsection{Implementation}
+\subsubsection{The Window}
+To start off, the implementation requires a \texttt{main :: IO ()} function to display a window to the user, and provide the necessary functions to the \texttt{play} function mentioned above. The window will have the title ``Circuit'', with a width of 1024 and height of 720, placed initially at the position (10,10) on the screen. 
+\begin{verbatim}
+window :: Display
+window = InWindow "Circuit" (floor width, floor height) (10,10)
+
+main :: IO ()
+main = play window
+            white
+            30
+            initialCircuit
+            draw
+            handleEvent
+            (const id)
+\end{verbatim}
+This will produce a window described above, with a white background colour and an fps of 30. Given an initial circuit, it will draw using the \texttt{draw} function and handle user interaction via \texttt{handleEvent}. Finally, as animations are not necessary, the last function simply just returns whatever it is given.\par
+Each aspect of the program, specifically the \texttt{main} function, the circuit, the rendering and the interaction will be located in its own file, ensuring simple modularity. 
+
+\subsubsection{The Circuit}
+As explained above, gloss relies upon a single data type to store all the details of the ``world'', or in this case, the circuit. Therefore, the implementation requires a data type \texttt{Circuit}, which will be a record containing all the circuit details, including the qubits in the circuit and the gates, and their locations, on the circuit.
+\begin{verbatim}
+data Circuit = Circuit { qubits :: [Int],
+                         gates :: [Gate]
+                       } deriving (Eq, Show)
+
+initialCircuit :: Circuit
+initialCircuit = Circuit { qubits = [0..2],
+                           gates = [] }
+                       
+data Gate = Null,
+          | Had Int [Int]
+          | PX Int [Int]
+          | PY Int [Int]
+          | PZ Int [Int]
+          | Swap Int [Int]
+          deriving (Eq, Show)
+          
+instance Ord Gate where
+  compare g1 g2 = compare (getCol g1) (getCol g2)
+\end{verbatim}
+A datatype \texttt{Gate} is also created, restricting a Gate to be of a specific type, with a column \texttt{Int} and a list of \texttt{Int}s representing the qubits it operates on, where the gate is applied to the last qubit in the list conditional on the first $n-1$ qubits before. If only one qubit is in the list, it is not conditional and acts as a standard gate. The only exception here is the SWAP gate, which will only be able to have a list of two qubits and will not be conditional. Gates will also be able to be sorted by their column, allowing easy sorting over lists of gates.
+
+\subsubsection{Rendering}
+The \texttt{draw} function is the main entry point in rendering the interface, and takes in a \texttt{Circuit} to draw. Every button and gate on the interface will look the same; a simple square white box, with a black outline and a symbol inside indicating what it does. For example, the button representing the Hadamard gate will need to have a ``H'' inside of it. So, first off, its easiest to define a function \texttt{drawBox} which will be used to draw the square box at the position passed in. The coordinates of each item will also be fashioned into a grid, so that the rows and columns on the circuit line up smoothly, with equal spacing between everything. For this, we can use two functions, \texttt{calcX} and \texttt{calcY} along with a \texttt{spacing Float} constant defined at the start.
+\begin{verbatim}
+drawBox :: Int -> Int -> String -> Picture
+drawBox c q t = translate (calcX c) (calcY q) $
+                pictures [ color white $ rectangleSolid (spacing/2) (spacing/2),
+                           color black $ rectangleWire (spacing/2) (spacing/2),
+                           color black $ translate (-spacing/8) (-spacing/8) 
+                               $ scale 0.1 0.1 $ text t ]
+\end{verbatim}
+
+\begin{wrapfigure}{l}{0.15\textwidth}
+    \centering
+    \includegraphics[width=0.1\textwidth]{drawbox1}
+    \caption{The result of drawBox 0 0 ``H''}
+\end{wrapfigure}
+
+As can be seen to the left, the box is drawn as required however the text is still off even after moving it, and even then still looks out of place. The lines making up the ``H'' are not big enough, and are not aesthetically pleasing. Therefore, a function \texttt{drawText} is required to handle drawing text onto the buttons.\par
+This function will take in a \texttt{String}, such as ``H'', and draw it using the appropriate rectangles. As the program will only be required to draw certain symbols, pattern matching can be used to handle all specific cases, and then return a blank picture for any unsupported symbol.\par
+From here, all of the buttons can be drawn efficiently using a list containing the text for each button, and mapping over this list with increasing values of x to draw each button. For this, a special case of \texttt{drawBox} needs to be implemented which does not translate the drawn picture to an x and y, allowing this to be handled by the calling function. Finally, a thicker line needs to be drawn under the buttons dictating a separation from the buttons and the circuit. However, as thick lines are not possible in gloss, the program simply draws two lines, with one under the other.
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.25\textwidth}
+        \begin{verbatim}
+buttons :: [String]
+buttons = [ "+",
+            "-",
+            "H",
+            "X",
+            "Y",
+            "Z",
+            "Swap",
+            "Run",
+            "Sim",
+            "Clear" ]
+        \end{verbatim}
+    \end{minipage}
+     \begin{minipage}{0.7\textwidth}
+        \begin{verbatim}
+drawButtons :: Picture
+drawButtons = pictures $
+              (map (\(x, b) -> translate (x*spacing) 0 $ 
+                  drawBox (-1) (-1) b) $ zip [0..] buttons) ++
+              [ color black $ line [(-spacing/2, -spacing/2), 
+                                    (width-spacing, -spacing/2)],
+                color black $ line [(-spacing/2, -spacing/2-1), 
+                                    (width-spacing, -spacing/2-1)],
+                color black $ line [(3*spacing/2, spacing/3), 
+                                    (3*spacing/2, -spacing/3)],
+                color black $ line [(13*spacing/2, spacing/3), 
+                                    (13*spacing/2, -spacing/3)]]
+        \end{verbatim}
+    \end{minipage}
+\end{figure}
+
+\begin{wrapfigure}{r}{0.47\textwidth}
+    \centering
+    \includegraphics[width=0.45\textwidth]{buttons1}
+    \caption{The result of drawButtons}
+\end{wrapfigure}
+The circuit now needs to be rendered. Given a \texttt{Circuit}, functions are required to draw the qubits and the gates. The qubits are simply black lines with the text ``|0>'' in front to show that they are initially in the $\ket 0$ state. It will also show the number of the qubit, improving the readability of the circuit. All this is done by mapping the drawing of the qubit over the qubit list in the circuit record passed in.\par
+Drawing the gates is slightly more complicated. Due to the design of the \texttt{Gate} type, each gate needs to be handled individually. However, each gate is handled pretty much the same, with the only difference being the Controlled-X gate (i.e. when the Pauli-X gate has multiple qubits in its list) and the SWAP gate.\par
+The function \texttt{drawGate} will take in a gate with a column value \texttt{c} and the qubits it acts on given by \texttt{qs}. Black dots representing the conditionality are drawn for each $n-1$ qubit in the list, and a line is then drawn connecting them to the last qubit. Finally, a box is drawn on the last qubit, with a symbol pertaining to the type of gate. The only complication here is when the conditional qubits in the list are both above and below the last qubit. In order to deal with this, a line has to be drawn between each qubit individually, instead of one long line from the first qubit to the last.\par
+In order to draw a Controlled-X gate, the conditional qubits are dealt with in a similar fashion, however instead of a box containing an ``X'' on the last qubit, a circle will be drawn with a plus inside; the same as shown in section 1.6.2. Finally, drawing the SWAP gate is simply a case of drawing a cross on each qubit in the list, with a vertical line connecting them together.\par
+Combining all this into one function \texttt{drawCircuit circuit = pictures [ drawQubits (qubits circuit), drawGates (gates circuit)]} produces the expected result over an initial circuit with gates already included.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{examplecircuit}
+    \caption{The result of drawing over a circuit with three qubits and gates = [Had 0 [0], PX 0 [1], PY 1 [0], PZ 1 [2], Had 2 [0, 1], PX 3 [0, 2], PZ 4 [0, 2, 1], Swap 5 [0, 1]]}
+\end{figure}
+
+\subsubsection{User Interaction}
+Handling user interaction is done via the \texttt{handleEvent} function. This function takes in an \texttt{Event} and a \texttt{Circuit}, and then returns a \texttt{Circuit} which it has altered in some way. Therefore, we can't directly call rendering functions, and instead need a way of storing user interaction details in the \texttt{Circuit} type. Simply adding an \texttt{edit :: String} and \texttt{mouse :: (Float, Float)} will achieve this. \texttt{Edit} will store the gate picked up at that moment, i.e. ``H'' for a Hadamard gate, while \texttt{mouse} will store the location of the mouse, allowing the picked-up gate to be seen following the mouse and knowing its location when dropped.\par
+The \texttt{Event} type contains all the details of a user event, such as a key press or mouse movement. It can take one of three distinct types:
+\begin{verbatim}
+data Event = EventKey Key KeyState Modifiers (Float, Float)
+           | EventMotion (Float, Float)
+           | EventResize (Int, Int)
+\end{verbatim}
+The \texttt{Key} type will contain either the character of the key pressed, the special key pressed (e.g. the Enter key) or the mouse button pressed (e.g. the left mouse button). The \texttt{KeyState} dictates if the key has been pressed or released, while the \texttt{Modifiers} represent whether the ctrl, shift or alt keys are also down. The \texttt{(Float, Float)} in both \texttt{EventKey} and \texttt{EventMotion} contain the current x and y positions of the mouse in the window. \par
+Upon pressing the left mouse button down, the user may want to either click on a button, click on a location on the circuit to place down a picked-up gate, or click on a gate already on the circuit to pick it up. Using a function \texttt{mousePosition :: (Float, Float) -> Circuit -> Circuit}, the program can check which of these has occured. If the right mouse button is instead pressed, any picked up gate is cleared, allowing the user to easily clear gates from the circuit or stop placing a gate down when one is picked up.\par
+\paragraph{Button Press}
+Using the \texttt{buttons} list created earlier, the button clicked can be retrieved by finding the column on the grid described earlier which the mouse is inside. If the mouse is indeed over a button, a function \texttt{buttonPress :: Circuit -> String -> Circuit} is called to handle which button was pressed. If the \texttt{String} passed in is a ``+'' or a ``-'', then a qubit needs to be added or removed from the circuit. If the \texttt{String} is ``Clear'', then all gates need to be removed from the circuit. The ``run'' and ``sim'' cases will be handled later on. In any other case, the \texttt{edit} record in the \texttt{circuit} needs to be updated to reflect that a gate has been selected from the buttons.\par
+Adding a qubit is simply a case of appending \texttt{[length \$ qubits circuit]} to the end of the qubits in the circuit, and removing a qubit is done by applying \texttt{init} to the list of qubits as long as the list is not empty. However, at the same time, all the gates on this qubit must also be removed, including gates conditional on the qubit. In order to do this, a function \texttt{getQs :: Gate -> [Int]} is used to extract the list of qubits from a gate, and a check is then done to see if the qubit to remove is included in this list. If so, the gate needs to be removed, else nothing is done. All this, combined into a function \texttt{remGateOnQubit :: Int -> Gate -> Gate}, is then mapped over the list of gates in the circuit, removing them as necessary. The removal is actually done by setting the gate to \texttt{Null} if it needs to be removed, and then applying \texttt{filter (/= Null)} over the returned list.\par
+If the Clear button is instead clicked, we simply set the \texttt{gates} record in the \texttt{circuit} to be \texttt{[]}. If a gate button is pressed, the \texttt{edit} record in the \texttt{circuit} is set to the \texttt{String} representing the gate. After this, the rendering functions need to be changed to show that a gate has been picked up.\par
+\begin{wrapfigure}{l}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.48\textwidth]{pickupgate}
+    \caption{A picked up Pauli-Y gate over an empty circuit.}
+\end{wrapfigure}
+
+In the \texttt{draw} function described earlier, dots must be drawn on all empty sections of the circuit to highlight that a gate can be placed here. This is done by drawing a black circle at the calculated x and y location on the circuit, and then mapping this over all the qubits on the circuit and a list of \texttt{[0..20]}, as roughly 20 columns fit in the window. Following this, the gate selected needs to be drawn under the mouse cursor by translate the result of the \texttt{drawBox} function to the mouse coordinates stored in the \texttt{mouse} record of the \texttt{circuit}.
+
+\paragraph{Placing a Gate}
+If the \texttt{edit} record in the \texttt{circuit} already has a value, then a gate has already been picked up. Therefore, if the mouse is over the circuit, then the user wants to place the gate down. The function must then calculate the column and row that it is being placed onto and pass it into a function \texttt{addGate :: Int -> Int -> Circuit -> Circuit}.\par
+Three things can then occur: the position on the circuit is already taken, the mouse is between two columns, or the position is empty. Dealing with the case of the position being taken is easiest, and just requires nothing to be changed; the gate is still picked up and the circuit is not altered. \par
+If the position is empty, the only thing required to do is to add a new gate to the circuit's list, with the column and row calculated earlier and the type specified by the \texttt{edit} record. Then, the \texttt{edit} record is cleared to show the gate has been placed down.\par
+If the mouse is between two columns, the user wants to effectively add a new column in between, and place the gate there. Therefore, all the gates with a column value higher than or equal to the position need to be moved right by one column. As there is an instance of \texttt{Ord} defined for gates already, the \texttt{sort} function can be used to sort by increasing column order. Following this, the \texttt{span} function can be used along with a new function \texttt{lteCol :: Int -> Gate -> Bool} - which returns True when the gate passed in is in a column less than or equal to the column passed in - the list of gates can be split up into the form \texttt{(bG, aG)}, where \texttt{bG} contains the gates before the new column and \texttt{aG} contains the gates which will be after the new column (i.e. the column value of each gate in this list needs to also be incremented by one). Then, the new gate can be placed in between the two sets, creating a new column for it to be placed onto. \par
+
+\paragraph{Picking up a Gate}
+Finally, if the \texttt{edit} record is empty and the mouse is over the circuit, the user wants to pick up a gate from the circuit. In this case, the function calculates the column and row it is being picked up from and passes it into a function \texttt{pickUpGate :: Int -> Int -> Circuit -> Circuit}. This function then calculates whether or not the mouse is in fact over a gate on the circuit, and if it is the gate is deleted (note that the column is not deleted if there is nothing else in it) and then the \texttt{edit} record is changed to show the gate has been picked up.\par
+
+\paragraph{Key Press}
+The number keys will be used to specify the control qubits for a gate which is picked up. For example, while a Hadamard gate is picked up, pressing the '0' key will specify that this gate will be conditional on the qubit ``q0''. Handling this is relatively simple using the \texttt{EventKey (Char c) ...} form of the \texttt{Event} type.\par
+If \texttt{c} is a number key, then the \texttt{edit} record of the \texttt{circuit} is updated by appending the a space along with the number pressed as long as a gate is picked up. If the gate is a SWAP gate, then this can only occur once (as the key pressed represents the qubit to swap with when placed on a different qubit), and so the length of the \texttt{edit} record must be checked. If the backspace key is instead pressed, causing \texttt{c} to equal \texttt{'\textbackslash b'}, then the conditional qubits need to be cleared, reverting the \texttt{edit} record back to simply store the gate type picked up.\par
+\begin{verbatim}
+handleEvent (EventKey (Char c) Up _ pos) circuit =
+  case head e of
+    'H' | c == '\b'                             -> circuit { edit = "H" }
+    'H' | c >= '0' && c <= '9'                  -> circuit { edit = e ++ [' ', c] }
+    ...
+    'S' | c >= '0' && c <= '9' && length e == 4 -> circuit { edit = e ++ [' ', c] }
+    ...
+  where
+      e = edit circuit
+\end{verbatim}
+\begin{wrapfigure}{r}{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.43\textwidth]{editH}
+    \caption{Picking up a Hadamard gate, with control qubits ``q0'' and ``q1''.}
+\end{wrapfigure}
+
+During the render process, the numbers already pressed can be shown easily using gloss' \texttt{text} function. The implementation must now be able to handle placing gates down with conditional qubits. In order to acheive this, a function \texttt{getControls :: String -> [Int]} is created. This function removes all spaces from the \texttt{String} passed in, removes duplicate numbers, and then converts each character into its relevant \texttt{Int} using the \texttt{read} function. Now, new gates can be created by appending the qubit it is placed on at the end of the list of control qubits. If any of the control qubits are equal to the qubit the gate is being placed on, the operation is cancelled to prevent errors from occuring.\par 
+
+\subsubsection{Executing the Circuit}
+In order to execute the circuit, it first needs to be compiled. This is actually fairly simple to do using the list of qubits and list of gates in the circuit. Each qubit in the list needs to be created in the state $\ket 0$, and then the unitary operation relating to the circuit needs to be executed using the \texttt{applyU} function, and finally the qubits are measured.\par
+\begin{verbatim}
+compileCircuit :: Circuit -> QIO [Bool]
+compileCircuit circuit = do
+  qs <- mkQbits (length $ qubits circuit) False
+  applyU (gatesToU (gates circuit) qs)
+  measQbits qs
+\end{verbatim}
+The \texttt{gatesToU} function is used to recursively convert each gate into its corresponding unitary operation, using the function \texttt{gateToU :: Gate -> [Qbit] -> U}, and then combine the operations using the \texttt{<>} operator. Upon being given a gate, the \texttt{gateToU} function will map the relevant unitary operation (e.g. \texttt{uhad} for a Hadamard gate) over the list of qubits, where each qubit is at the index specified by the gate's qubit list. A function \texttt{condU} is used to conditionally apply the operation according to the first $n-1$ qubits in the gate's qubit list.\par
+When the circuit is compiled, it will be able to be run or simulated using the appropriate functions when the user clicks either the ``Run'' or ``Sim'' buttons described above. The result of either is then saved in a new record \texttt{result :: String} inside the \texttt{circuit} type. For simulation, this is done simply using \texttt{show \$ sim \$ compileCircuit circuit}, as the result of \texttt{sim} can be converted straight into a \texttt{String}. However, running the circuit is more difficult, as \texttt{run} returns the type \texttt{IO a}, in this case \texttt{IO [Bool]}.\par
+As an \texttt{IO a} type cannot be converted into a \texttt{String}, as it is wrapped in the \texttt{IO} monad, we must find a way of extracting the values. This can be done using the function \texttt{unsafePerformIO :: IO a -> a}, which does what we want by performing the IO actions as a pure function. Because of this, Haskell will optimize the actions (as it does not realise it is an IO action) and so certain side-effects may not be executed. However, the computation will not produce any side-effects, and its only action is to generate a random number using \texttt{Random.randomRIO}, and so it is safe to use in this instance, producing a \texttt{String} result via \texttt{show \$ unsafePerformIO \$ run \$ compileCircuit circuit}.\par
+In order to render the results, the \texttt{draw} function needs to be altered. The \texttt{result} record in the \texttt{circuit} will contain a \texttt{String} of what to draw, and so gloss' \texttt{text} function can be used to render the text underneath the rows of qubits. \par
+The execution of the built circuit can be made easier changing the \texttt{handleEvent} function, so that when the Enter key is pressed, the circuit is run.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{rungrover}
+    \caption{Running Grover's algorithm, searching for the state $\ket{110}$, over three qubits.}
+\end{figure}
+
+
 
 \subsection{Testing}
 

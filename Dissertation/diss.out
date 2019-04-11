@@ -41,10 +41,21 @@
 \BOOKMARK [2][-]{subsection.6.2}{Shor's Algorithm}{section.6}% 41
 \BOOKMARK [3][-]{subsubsection.6.2.1}{Function Application}{subsection.6.2}% 42
 \BOOKMARK [3][-]{subsubsection.6.2.2}{The Quantum Fourier Transform}{subsection.6.2}% 43
-\BOOKMARK [3][-]{subsubsection.6.2.3}{An alternative}{subsection.6.2}% 44
-\BOOKMARK [1][-]{section.7}{Quantum Circuit Builder}{}% 45
-\BOOKMARK [2][-]{subsection.7.1}{Design}{section.7}% 46
-\BOOKMARK [2][-]{subsection.7.2}{Implementation}{section.7}% 47
-\BOOKMARK [2][-]{subsection.7.3}{Testing}{section.7}% 48
-\BOOKMARK [1][-]{section.8}{Reflections}{}% 49
-\BOOKMARK [1][-]{section.9}{References}{}% 50
+\BOOKMARK [3][-]{subsubsection.6.2.3}{Finding the period}{subsection.6.2}% 44
+\BOOKMARK [3][-]{subsubsection.6.2.4}{The Implementation - an Alternative}{subsection.6.2}% 45
+\BOOKMARK [1][-]{section.7}{Quantum Circuit Builder}{}% 46
+\BOOKMARK [2][-]{subsection.7.1}{Analysis}{section.7}% 47
+\BOOKMARK [3][-]{subsubsection.7.1.1}{Specification}{subsection.7.1}% 48
+\BOOKMARK [2][-]{subsection.7.2}{Graphics in Haskell}{section.7}% 49
+\BOOKMARK [3][-]{subsubsection.7.2.1}{Diagrams}{subsection.7.2}% 50
+\BOOKMARK [3][-]{subsubsection.7.2.2}{Gloss}{subsection.7.2}% 51
+\BOOKMARK [3][-]{subsubsection.7.2.3}{The Package of Choice}{subsection.7.2}% 52
+\BOOKMARK [2][-]{subsection.7.3}{Implementation}{section.7}% 53
+\BOOKMARK [3][-]{subsubsection.7.3.1}{The Window}{subsection.7.3}% 54
+\BOOKMARK [3][-]{subsubsection.7.3.2}{The Circuit}{subsection.7.3}% 55
+\BOOKMARK [3][-]{subsubsection.7.3.3}{Rendering}{subsection.7.3}% 56
+\BOOKMARK [3][-]{subsubsection.7.3.4}{User Interaction}{subsection.7.3}% 57
+\BOOKMARK [3][-]{subsubsection.7.3.5}{Executing the Circuit}{subsection.7.3}% 58
+\BOOKMARK [2][-]{subsection.7.4}{Testing}{section.7}% 59
+\BOOKMARK [1][-]{section.8}{Reflections}{}% 60
+\BOOKMARK [1][-]{section.9}{References}{}% 61

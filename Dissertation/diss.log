@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.2.19)  10 APR 2019 15:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2019.2.19)  12 APR 2019 00:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -789,7 +789,7 @@ LaTeX Info: Redefining \nameref on input line 28.
 \@outlinefile=\write4
 \openout4 = `diss.out'.
 
-<uonlogo.jpg, id=208, 306.14375pt x 208.78pt>
+<uonlogo.jpg, id=252, 306.14375pt x 208.78pt>
 File: uonlogo.jpg Graphic file (type jpg)
 <use uonlogo.jpg>
 Package pdftex.def Info: uonlogo.jpg  used on input line 31.
@@ -837,7 +837,7 @@ l.99 ...t{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}$$
                                                    [1
 
 ]
-<blochsphere.png, id=374, 256.96pt x 273.02pt>
+<blochsphere.png, id=440, 256.96pt x 273.02pt>
 File: blochsphere.png Graphic file (type png)
 <use blochsphere.png>
 Package pdftex.def Info: blochsphere.png  used on input line 129.
@@ -857,7 +857,7 @@ as been already used, duplicate ignored
                    \relax 
 l.169     measQbit q
                      [3 <./blochsphere.png>]
-<hadamard.png, id=389, 1927.2pt x 815.045pt>
+<hadamard.png, id=455, 1927.2pt x 815.045pt>
 File: hadamard.png Graphic file (type png)
 <use hadamard.png>
 Package pdftex.def Info: hadamard.png  used on input line 210.
@@ -868,34 +868,34 @@ been already used, duplicate ignored
                    \relax 
 l.212 \end{figure}
                    [4]
-<not.png, id=395, 150.5625pt x 46.1725pt>
+<not.png, id=461, 150.5625pt x 46.1725pt>
 File: not.png Graphic file (type png)
 <use not.png>
 Package pdftex.def Info: not.png  used on input line 249.
 (pdftex.def)             Requested size: 113.24197pt x 34.7286pt.
-<paulix.png, id=396, 200.75pt x 92.345pt>
+<paulix.png, id=462, 200.75pt x 92.345pt>
 File: paulix.png Graphic file (type png)
 <use paulix.png>
 Package pdftex.def Info: paulix.png  used on input line 250.
 (pdftex.def)             Requested size: 81.5309pt x 37.50519pt.
  [5 <./hadamard.png> <./not.png> <./paulix.png (PNG copy)>]
-<swap.png, id=406, 150.5625pt x 94.3525pt>
+<swap.png, id=473, 150.5625pt x 94.3525pt>
 File: swap.png Graphic file (type png)
 <use swap.png>
 Package pdftex.def Info: swap.png  used on input line 300.
 (pdftex.def)             Requested size: 113.24197pt x 70.96718pt.
-<cnot.png, id=407, 150.5625pt x 91.34125pt>
+<cnot.png, id=474, 150.5625pt x 91.34125pt>
 File: cnot.png Graphic file (type png)
 <use cnot.png>
 Package pdftex.def Info: cnot.png  used on input line 301.
 (pdftex.def)             Requested size: 113.24197pt x 68.70227pt.
-<toffoli.png, id=408, 150.5625pt x 129.48375pt>
+<toffoli.png, id=475, 150.5625pt x 129.48375pt>
 File: toffoli.png Graphic file (type png)
 <use toffoli.png>
 Package pdftex.def Info: toffoli.png  used on input line 302.
 (pdftex.def)             Requested size: 113.24197pt x 97.39113pt.
  [6 <./swap.png> <./cnot.png> <./toffoli.png>]
-<cccnot.png, id=421, 456.70625pt x 565.11125pt>
+<cccnot.png, id=488, 456.70625pt x 565.11125pt>
 File: cccnot.png Graphic file (type png)
 <use cccnot.png>
 Package pdftex.def Info: cccnot.png  used on input line 324.
@@ -910,13 +910,13 @@ LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 477.
 LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 500.
 
 [14]
-<oracle0010.png, id=490, 896.34875pt x 597.23125pt>
+<oracle0010.png, id=556, 896.34875pt x 597.23125pt>
 File: oracle0010.png Graphic file (type png)
 <use oracle0010.png>
 Package pdftex.def Info: oracle0010.png  used on input line 560.
 (pdftex.def)             Requested size: 113.24197pt x 75.44655pt.
  [15]
-<oracle00102.png, id=498, 857.2025pt x 597.23125pt>
+<oracle00102.png, id=564, 857.2025pt x 597.23125pt>
 File: oracle00102.png Graphic file (type png)
 <use oracle00102.png>
 Package pdftex.def Info: oracle00102.png  used on input line 580.
@@ -930,30 +930,30 @@ n/10 = 1\OML/cmm/m/it/10 =[]  \U/msa/m/n/10 ) \OML/cmm/m/it/10 ^^R \OMS/cmsy/m/
 n/10 ^^Y \OT1/cmr/m/n/10 1\OML/cmm/m/it/10 =[]
  []
 
-<grovers110V.png, id=512, 488.82625pt x 419.5675pt>
+<grovers110V.png, id=578, 488.82625pt x 419.5675pt>
 File: grovers110V.png Graphic file (type png)
 <use grovers110V.png>
 Package pdftex.def Info: grovers110V.png  used on input line 690.
 (pdftex.def)             Requested size: 113.24197pt x 97.19632pt.
-<grovers110W.png, id=513, 1040.88875pt x 413.545pt>
+<grovers110W.png, id=579, 1040.88875pt x 413.545pt>
 File: grovers110W.png Graphic file (type png)
 <use grovers110W.png>
 Package pdftex.def Info: grovers110W.png  used on input line 692.
 (pdftex.def)             Requested size: 226.48395pt x 89.97685pt.
 [18]
-<grovers110.png, id=521, 1197.47375pt x 470.75874pt>
+<grovers110.png, id=588, 1197.47375pt x 470.75874pt>
 File: grovers110.png Graphic file (type png)
 <use grovers110.png>
 Package pdftex.def Info: grovers110.png  used on input line 697.
 (pdftex.def)             Requested size: 226.48395pt x 89.03564pt.
  [19 <./grovers110V.png (PNG copy)> <./grovers110W.png (PNG copy)> <./grovers11
 0.png (PNG copy)>] [20]
-<groverImp.png, id=541, 2888.7925pt x 345.29pt>
+<groverImp.png, id=608, 2888.7925pt x 345.29pt>
 File: groverImp.png Graphic file (type png)
 <use groverImp.png>
 Package pdftex.def Info: groverImp.png  used on input line 786.
 (pdftex.def)             Requested size: 452.9679pt x 54.1411pt.
-<groverFinal.png, id=542, 3171.85pt x 722.7pt>
+<groverFinal.png, id=609, 3171.85pt x 722.7pt>
 File: groverFinal.png Graphic file (type png)
 <use groverFinal.png>
 Package pdftex.def Info: groverFinal.png  used on input line 798.
@@ -963,19 +963,127 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [21 <./groverImp.png (PNG copy)>] [22 <./groverFinal.png (PNG copy)>] [23] [24
 ] [25]
-<qft.png, id=587, 1824.8175pt x 472.76625pt>
+<qft.png, id=653, 1824.8175pt x 472.76625pt>
 File: qft.png Graphic file (type png)
 <use qft.png>
 Package pdftex.def Info: qft.png  used on input line 938.
 (pdftex.def)             Requested size: 362.37569pt x 93.88068pt.
 
 [26]
-<qft2.png, id=593, 1713.40125pt x 472.76625pt>
+<qft2.png, id=659, 1713.40125pt x 472.76625pt>
 File: qft2.png Graphic file (type png)
 <use qft2.png>
 Package pdftex.def Info: qft2.png  used on input line 946.
 (pdftex.def)             Requested size: 362.37569pt x 99.98358pt.
- [27 <./qft.png (PNG copy)> <./qft2.png (PNG copy)>] [28] [29] (./diss.bbl
+ [27 <./qft.png (PNG copy)> <./qft2.png (PNG copy)>] [28] [29] [30]
+[31] [32] [33]
+<drawbox1.png, id=715, 32.37094pt x 28.60687pt>
+File: drawbox1.png Graphic file (type png)
+<use drawbox1.png>
+Package pdftex.def Info: drawbox1.png  used on input line 1141.
+(pdftex.def)             Requested size: 45.29955pt x 40.03667pt.
+
+Overfull \hbox (8.42102pt too wide) in paragraph at lines 1170--1170
+[]                  \OT1/cmtt/m/n/10 drawBox (-1) (-1) b) $ zip [0..] buttons) 
+++[] 
+ []
+
+
+Overfull \hbox (3.17107pt too wide) in paragraph at lines 1171--1171
+[]              \OT1/cmtt/m/n/10 [ color black $ line [(-spacing/2, -spacing/2)
+,[] 
+ []
+
+
+Overfull \hbox (24.17088pt too wide) in paragraph at lines 1172--1172
+[]                                    \OT1/cmtt/m/n/10 (width-spacing, -spacing
+/2)],[] 
+ []
+
+
+Overfull \hbox (13.67097pt too wide) in paragraph at lines 1173--1173
+[]                \OT1/cmtt/m/n/10 color black $ line [(-spacing/2, -spacing/2-
+1),[] 
+ []
+
+
+Overfull \hbox (34.67079pt too wide) in paragraph at lines 1174--1174
+[]                                    \OT1/cmtt/m/n/10 (width-spacing, -spacing
+/2-1)],[] 
+ []
+
+
+Overfull \hbox (3.17107pt too wide) in paragraph at lines 1175--1175
+[]                \OT1/cmtt/m/n/10 color black $ line [(3*spacing/2, spacing/3)
+,[] 
+ []
+
+
+Overfull \hbox (13.67097pt too wide) in paragraph at lines 1176--1176
+[]                                    \OT1/cmtt/m/n/10 (3*spacing/2, -spacing/3
+)],[] 
+ []
+
+
+Overfull \hbox (8.42102pt too wide) in paragraph at lines 1177--1177
+[]                \OT1/cmtt/m/n/10 color black $ line [(13*spacing/2, spacing/3
+),[] 
+ []
+
+
+Overfull \hbox (18.92093pt too wide) in paragraph at lines 1178--1178
+[]                                    \OT1/cmtt/m/n/10 (13*spacing/2, -spacing/
+3)]][] 
+ []
+
+<buttons1.png, id=716, 430.60875pt x 54.9553pt>
+File: buttons1.png Graphic file (type png)
+<use buttons1.png>
+Package pdftex.def Info: buttons1.png  used on input line 1185.
+(pdftex.def)             Requested size: 203.83417pt x 26.0143pt.
+[34 <./drawbox1.png> <./buttons1.png (PNG copy)>]
+<examplecircuit.png, id=724, 883.80188pt x 676.77844pt>
+File: examplecircuit.png Graphic file (type png)
+<use examplecircuit.png>
+Package pdftex.def Info: examplecircuit.png  used on input line 1195.
+(pdftex.def)             Requested size: 362.37569pt x 277.49129pt.
+ [35 <./examplecircuit.png>]
+<pickupgate.png, id=731, 772.38562pt x 237.88875pt>
+File: pickupgate.png Graphic file (type png)
+<use pickupgate.png>
+Package pdftex.def Info: pickupgate.png  used on input line 1215.
+(pdftex.def)             Requested size: 217.42265pt x 66.96411pt.
+
+[36 <./pickupgate.png>]
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 123
+2.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 1232.
+
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbackslash' on input line 1232.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on in
+put line 1244.
+
+<editH.png, id=741, 773.89125pt x 240.9pt>
+File: editH.png Graphic file (type png)
+<use editH.png>
+Package pdftex.def Info: editH.png  used on input line 1246.
+(pdftex.def)             Requested size: 194.77287pt x 60.62918pt.
+[37 <./editH.png>]
+<rungrover.png, id=750, 883.80188pt x 676.77844pt>
+File: rungrover.png Graphic file (type png)
+<use rungrover.png>
+Package pdftex.def Info: rungrover.png  used on input line 1268.
+(pdftex.def)             Requested size: 362.37569pt x 277.49129pt.
+
+Underfull \vbox (badness 4752) has occurred while \output is active []
+
+ [38]
+[39 <./rungrover.png>] (./diss.bbl
 Underfull \hbox (badness 2376) in paragraph at lines 4--8
 []\OT1/cmr/m/n/10 Scott Aaron-son.  Lim-its on ef-fi-cient com-pu-ta-tion in th
 e phys-i-cal world.  2005.
@@ -1076,36 +1184,46 @@ Underfull \hbox (badness 10000) in paragraph at lines 99--103
 2/2018.
  []
 
-[30]
+[40]
 Underfull \hbox (badness 10000) in paragraph at lines 105--108
 []\OT1/cmr/m/n/10 Jupyter Note-book Viewer - Qiskit Tu-to-ri-als.  Last ac-cess
 ed 06/12/2018.
  []
 
 
-Underfull \hbox (badness 4819) in paragraph at lines 110--114
+Underfull \hbox (badness 4819) in paragraph at lines 117--121
 []\OT1/cmr/m/n/10 David Luben-sky.  Quan-tum Com-put-ing gets an API and SDK, M
 arch 2017.
  []
 
-) [31]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1027.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1027.
+
+Underfull \hbox (badness 1755) in paragraph at lines 156--161
+[]\OT1/cmr/m/n/10 Brent Yorgey.  di-a-grams: Em-bed-ded domain-specific lan-gua
+ge for declar-a-tive vec-
+ []
+
+) [41]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1283.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1283.
  (./diss.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1027.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1027.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1283.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1283.
 
 Package rerunfilecheck Info: File `diss.out' has not changed.
-(rerunfilecheck)             Checksum: 6B3865841F1A76907879D82B3BA891BA;3272.
+(rerunfilecheck)             Checksum: 85D0F0AABEEF6F1441ABCB300F5F14F0;4096.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
  ) 
 Here is how much of TeX's memory you used:
- 19842 strings out of 492616
- 357496 string characters out of 6135177
- 456307 words of memory out of 5000000
- 23218 multiletter control sequences out of 15000+600000
+ 19937 strings out of 492616
+ 358863 string characters out of 6135177
+ 456371 words of memory out of 5000000
+ 23259 multiletter control sequences out of 15000+600000
  9190 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 59i,12n,94p,1004b,705s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 59i,12n,94p,1029b,705s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texmf-dist/fonts/type1/public
@@ -1123,10 +1241,10 @@ pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/shar
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-dist/f
 onts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texmf-dist/fonts/type
 1/public/amsfonts/symbols/msbm10.pfb>
-Output written on diss.pdf (38 pages, 472747 bytes).
+Output written on diss.pdf (48 pages, 576745 bytes).
 PDF statistics:
- 726 PDF objects out of 1000 (max. 8388607)
- 635 compressed objects within 7 object streams
- 163 named destinations out of 1000 (max. 500000)
- 503 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 880 PDF objects out of 1000 (max. 8388607)
+ 768 compressed objects within 8 object streams
+ 209 named destinations out of 1000 (max. 500000)
+ 621 words of extra memory for PDF output out of 10000 (max. 10000000)
 
