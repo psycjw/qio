@@ -14,6 +14,7 @@ data Gate = Null
           | Swap Int [Int]
           deriving (Eq, Show)
 
+-- Gates are compared by their column index, allowing easy sorting around a column index.
 instance Ord Gate where
   compare g1 g2 = compare (getCol g1) (getCol g2)
 
