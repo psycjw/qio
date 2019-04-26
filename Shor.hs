@@ -1,6 +1,6 @@
 
 -- | This module defines the QIO computation that represents Shor's factorisation
--- algorithm. It makes use of the Arithmetic library, and the Quantum Fourier 
+-- algorithm. It makes use of the Arithmetic library, and the Quantum Fourier
 -- Transform.
 module QIO.Shor where
 
@@ -13,6 +13,8 @@ import QIO.QExamples
 import QIO.QArith
 import QIO.Qft
 import System.Time
+import System.TimeIt
+import Data.Ratio
 
 -- | The inverse Quantum Fourier Transform is defined by reversing the QFT
 qftI :: QInt -> U
@@ -29,32 +31,39 @@ shorU k i1 x n = hadamardsI k `mappend` modExp n x k i1 `mappend` qftI k
 -- | A quantum computation the implementes shor's algorithm, returning the period
 -- of the function.
 shor :: Int -> Int -> QIO Int
-shor x n = do 
+shor x n = do
   i0 <- mkQ 0
   i1 <- mkQ 1
   applyU (shorU i0 i1 x n)
   measQ i0
-
--- | A classical (inefficient) implementation of the period finding subroutine 
+-- | A classical (inefficient) implementation of the period finding subroutine
 period :: Int -> Int -> Int
 period m q = r where (_,r) = reduce (m,q)
 
 -- | A wrapper for Shor's algorithm, that returns prime factors of \n\.
-factor :: Int -> QIO (Int,Int)
-factor n | even n = return (2,2)
-         | otherwise = do x <- rand_coprime n
-                          a <- shor x n
-                          let xa = x^(half a) 
-                            in if odd a || xa == (n-1) `mod` n || a == 0
-                               then factor n
-                               else return (gcd (xa+1) n,gcd (xa-1) n)
+factor :: Int -> IO (Int, Int)
+factor n | even n = return (2, 2)
+         | otherwise = do b <- timeIt $ run $ rand_coprime n
+                          a <- timeIt $ run $ shor b n
+                          if a == 0
+                            then factor n
+                            else do
+                              let r = denominator $ a % 16
+                              if odd r || b^r `mod` n /= 1
+                                then factor n
+                                else do
+                                  let x = b^(half r) `mod` n
+                                  if (x-1) `mod` n == 0
+                                    then factor n
+                                    else return (gcd (x-1) n, gcd (x+1) n)
+
 --this function can only be run too, for similar reasons to the rand_co'
 --function below
 
 -- | This function simulates the running of a QIO computation, whilst using
 -- System.Time functions to time how long the simulation took.
 runTime :: QIO a -> IO a
-runTime a = do 
+runTime a = do
   start <- getClockTime
   result <- run a
   stop <- getClockTime
@@ -64,7 +73,7 @@ runTime a = do
 -- | Times the running of various subroutines within the factorisation algorithm.
 factorV' :: Int -> IO (Int,Int)
 factorV' n | even n = return (2,2)
-           | otherwise = do 
+           | otherwise = do
   start <- getClockTime
   putStr ("Started at " ++ (show start) ++ "\n")
   x <- run (rand_coprime n)
@@ -73,12 +82,12 @@ factorV' n | even n = return (2,2)
   stop <- getClockTime
   putStr ("Shor took " ++ (timeDiffToString (diffClockTimes stop start)) ++ "\n")
   putStr ("period a = " ++ show a)
-  let xa = x^(half a) 
+  let xa = x^(half a)
     in do putStr (", giving xa = " ++ show xa ++ "\n")
           if odd a || xa == (n-1) `mod` n || (gcd (xa+1) n,gcd (xa-1) n) == (1,n) || (gcd (xa+1) n,gcd (xa-1) n) == (n,1) || (gcd (xa+1) n,gcd (xa-1) n) == (1,1)
            then do putStr "Recalling factorV\n"
                    factorV' n
-           else do putStr "Result: " 
+           else do putStr "Result: "
                    return (gcd (xa+1) n,gcd (xa-1) n)
 
 -- | Calls the 'factorV'', and times the overall factorisation.
@@ -87,7 +96,7 @@ factorV n = do start <- getClockTime
                (a,b) <- factorV' n
                stop <- getClockTime
                putStr ( "Factors of "
-                       ++ (show n) 
+                       ++ (show n)
                        ++ " include "
                        ++ (show a)
                        ++ " and "
@@ -106,7 +115,7 @@ rand_coprime n = do x <- randomQIO (0,(length cps)-1)
 -- computation that returns a random number between 2 and \n\, that is then
 -- returned if it is co-prime to \n\.
 rand_co' :: Int -> QIO Int
-rand_co' n = do 
+rand_co' n = do
   x <- randomQIO (2,n)
   if gcd x n == 1 then return x else rand_co' n
 --simulating this (with the sim function) gives rise to infinite paths in
@@ -117,14 +126,8 @@ rand_co' n = do
 half :: Int -> Int
 half x = floor (fromIntegral x/2.0)
 
--- | Reduces a pair of integers, by dividing them by thier gcd, 
+-- | Reduces a pair of integers, by dividing them by thier gcd,
 -- until their gcd is 1.
 reduce :: (Int,Int) -> (Int,Int)
 reduce (x,y) = if g == 1 then (x,y) else (floor ((fromIntegral x)/(fromIntegral g)),floor ((fromIntegral y)/(fromIntegral g)))
                where g = gcd x y
-
-
-
-
-
-
