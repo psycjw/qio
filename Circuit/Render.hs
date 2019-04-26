@@ -1,8 +1,12 @@
-module Render where
+module QIO.Circuit.Render where
 
-import Circuit
+import QIO.Circuit.Circuit
 import Graphics.Gloss
 import Graphics.Gloss.Data.Color
+import System.IO.Unsafe
+
+import QIO.Qio
+import qualified QIO.QioSyn as Q
 
 width, height, leftX, spacing, textSize :: Float
 width = 1024
@@ -36,9 +40,7 @@ drawButtons :: Picture
 drawButtons = pictures $
               (map (\(x, b) -> translate (x*spacing) 0 $ drawBox (-1) (-1) b) $ zip [0..] buttons) ++
               [ color black $ line [(-spacing/2, -spacing/2), (width-spacing, -spacing/2)],
-                color black $ line [(-spacing/2, -spacing/2-1), (width-spacing, -spacing/2-1)],
-                color black $ line [(3*spacing/2, spacing/3), (3*spacing/2, -spacing/3)],
-                color black $ line [(13*spacing/2, spacing/3), (13*spacing/2, -spacing/3)]]
+                color black $ line [(-spacing/2, -spacing/2-1), (width-spacing, -spacing/2-1)]]
 
 drawCircuit :: Circuit -> Picture
 drawCircuit circuit = pictures [ drawQubits (qubits circuit),
@@ -59,11 +61,13 @@ drawGates = pictures . map drawGate
 
 drawGate :: Gate -> Picture
 drawGate Null                = Blank
-drawGate (Had c qs)          = pictures $
+drawGate (Had c qs)          = color black $
+                               pictures $
                                  (map (\q -> color black $ translate (calcX c) (calcY q) $ circleSolid (textSize*1.5)) (init qs)) ++
                                  [ drawLines c qs [],
                                    drawBox c (last qs) "H" ]
-drawGate (PX c qs)           = pictures $
+drawGate (PX c qs)           = color black $
+                               pictures $
                                  (map (\q -> color black $ translate (calcX c) (calcY q) $ circleSolid (textSize*1.5)) (init qs)) ++
                                  [ drawLines c qs [],
                                    gate ]
@@ -74,11 +78,13 @@ drawGate (PX c qs)           = pictures $
                                           else pictures [ color black $ translate (calcX c) ql $ thickCircle (textSize*3) (textSize/1.3),
                                                           color black $ translate (calcX c) ql $ rectangleSolid (textSize*5.2) (textSize/2),
                                                           color black $ translate (calcX c) ql $ rectangleSolid (textSize/2) (textSize*5.2) ]
-drawGate (PY c qs)           = pictures $
+drawGate (PY c qs)           = color black $
+                               pictures $
                                  (map (\q -> color black $ translate (calcX c) (calcY q) $ circleSolid (textSize*1.5)) (init qs)) ++
                                  [ drawLines c qs [],
                                    drawBox c (last qs) "Y" ]
-drawGate (PZ c qs)           = pictures $
+drawGate (PZ c qs)           = color black $
+                               pictures $
                                  (map (\q -> color black $ translate (calcX c) (calcY q) $ circleSolid (textSize*1.5)) (init qs)) ++
                                  [ drawLines c qs [],
                                    drawBox c (last qs) "Z" ]

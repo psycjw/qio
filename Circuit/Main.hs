@@ -1,8 +1,8 @@
-module Main where
+module QIO.Circuit.Main where
 
-import Render
-import Circuit
-import Logic
+import QIO.Circuit.Render
+import QIO.Circuit.Circuit
+import QIO.Circuit.Logic
 import Graphics.Gloss
 import Graphics.Gloss.Data.Color
 

@@ -1,6 +1,6 @@
-module Compile where
+module QIO.Circuit.Compile where
 
-import qualified Circuit as C
+import qualified QIO.Circuit.Circuit as C
 
 import Data.Complex
 import QIO.QioSyn
